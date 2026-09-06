@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+neo4j
+psycopg[binary]
+pydantic
+python-dotenv
+pandas
+networkx
+numpy
+pytest
