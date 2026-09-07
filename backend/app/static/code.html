@@ -1,0 +1,1659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>AIGIS-GRAPH | Forensic Criminal Network Intelligence</title>
+  
+  <!-- Google Fonts & Material Symbols Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  
+  <!-- HTML2PDF CDN for Direct Client-Side PDF File Generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['IBM Plex Sans', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          },
+          colors: {
+            slatecanvas: {
+              DEFAULT: '#8292a5',
+              dark: '#6f8095',
+              deep: '#5a6b80'
+            },
+            platinum: {
+              50: '#f8fafc',
+              100: '#f1f5f9',
+              200: '#e2e8f0',
+              300: '#cbd5e1',
+              400: '#94a3b8',
+              500: '#64748b',
+              600: '#475569'
+            }
+          },
+          boxShadow: {
+            subtle: '0 1px 3px 0 rgb(15 23 42 / 0.08), 0 1px 2px -1px rgb(15 23 42 / 0.08)',
+            card: '0 4px 14px -2px rgb(15 23 42 / 0.12), 0 2px 5px -2px rgb(15 23 42 / 0.08)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    @layer base {
+      html, body { margin: 0; padding: 0; font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif; }
+      body { background-color: #8292a5; color: #0f172a; }
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #94a3b8; }
+    ::-webkit-scrollbar-thumb { background: #64748b; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+    .tab-active {
+      background: #ffffff !important;
+      color: #0f172a !important;
+      border-bottom: 2px solid #1e293b !important;
+      box-shadow: 0 1px 2px 0 rgb(15 23 42 / 0.05);
+    }
+
+    .highlighted-edge {
+      stroke: #ec4899 !important;
+      stroke-width: 3.5px !important;
+      filter: drop-shadow(0 0 8px rgba(236, 72, 153, 0.9)) !important;
+      animation: pulse-edge 1.2s infinite alternate ease-in-out;
+    }
+    @keyframes pulse-edge {
+      0% { stroke-width: 3px; stroke: #ec4899; }
+      100% { stroke-width: 5px; stroke: #f43f5e; }
+    }
+  </style>
+</head>
+
+<body class="bg-[#8292a5] text-slate-800 antialiased min-h-screen flex flex-col font-sans selection:bg-slate-300 selection:text-slate-900">
+
+  <!-- TOP APP BAR -->
+  <header class="no-print bg-[#f8fafc]/95 backdrop-blur-md border-b border-slate-300 shadow-subtle sticky top-0 z-50">
+    <div class="h-14 px-6 flex items-center justify-between">
+      <!-- Case Meta & Live Connection Status -->
+      <div class="flex items-center gap-4 min-w-0">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-slate-800 text-white flex items-center justify-center shadow-sm ring-1 ring-slate-600/50">
+            <span class="material-symbols-outlined text-[19px]">hub</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-bold text-sm tracking-tight text-slate-900 leading-tight">AIGIS-GRAPH</span>
+            <span class="text-[10px] text-slate-500 font-mono">Forensic Intel v3.4</span>
+          </div>
+        </div>
+
+        <div class="h-5 w-px bg-slate-300 hidden sm:block"></div>
+
+        <div class="hidden sm:flex items-center gap-2 font-mono text-xs">
+          <span class="text-rose-800 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded font-bold">CASE #902-CRIMNET</span>
+          <span class="text-slate-400">/</span>
+          <span class="text-slate-700 font-medium truncate max-w-xs md:max-w-md">Op: Viper Syndicate - Financial & CDR Correlation</span>
+        </div>
+
+        <div class="hidden lg:flex items-center gap-2 px-3 py-1 rounded-md bg-slate-100 border border-slate-300 text-[11px] font-mono">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-slate-700 font-medium">FastAPI + Neo4j Connected</span>
+          <span class="text-slate-300">|</span>
+          <span class="text-slate-500">12ms</span>
+        </div>
+      </div>
+
+      <!-- Actions & Analyst Profile -->
+      <div class="flex items-center gap-3 shrink-0">
+        <button id="btn-ingest-top" onclick="loadAndAnalyzeNetwork()" class="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-900 text-white font-medium text-xs px-3.5 py-1.5 rounded-lg shadow-sm transition-all cursor-pointer">
+          <span class="material-symbols-outlined text-[16px]">cloud_sync</span>
+          <span>Generate / Ingest Network</span>
+        </button>
+
+        <button onclick="triggerRecompute()" class="hidden md:flex items-center gap-1.5 bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-medium text-xs px-3 py-1.5 rounded-lg shadow-xs transition-all cursor-pointer">
+          <span class="material-symbols-outlined text-[16px] text-slate-600">scatter_plot</span>
+          <span>Recompute Analysis</span>
+        </button>
+
+        <button onclick="downloadPdfDossier()" id="btn-export-pdf" class="flex items-center gap-1.5 bg-slate-700 hover:bg-slate-800 text-white font-medium text-xs px-3.5 py-1.5 rounded-lg shadow-sm transition-all cursor-pointer">
+          <span class="material-symbols-outlined text-[16px]">picture_as_pdf</span>
+          <span id="pdf-btn-text">Export Dossier (PDF)</span>
+        </button>
+
+        <div class="flex items-center gap-2 pl-2 border-l border-slate-300 text-xs">
+          <div class="flex items-center gap-2 px-2.5 py-1 rounded-md bg-slate-100 border border-slate-300 text-xs hidden sm:flex">
+            <span class="material-symbols-outlined text-slate-600 text-[17px]">shield_person</span>
+            <span class="text-slate-800 font-medium">Analyst Sharma</span>
+          </div>
+          <div class="w-8 h-8 rounded-full bg-slate-800 text-white flex items-center justify-center text-xs font-semibold font-mono shadow-sm">
+            AS
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- SUB-VIEW NAVIGATION TAB BAR -->
+  <nav id="top-tab-bar" class="no-print bg-[#f1f5f9] border-b border-slate-300 px-6 flex items-center gap-1 text-xs sticky top-14 z-40 shadow-xs overflow-x-auto">
+    <button onclick="switchTab('canvas-tab')" id="tab-btn-canvas" class="tab-btn tab-active flex items-center gap-2 px-4 py-3 font-semibold text-slate-800 border-b-2 border-transparent transition-all cursor-pointer whitespace-nowrap">
+      <span class="material-symbols-outlined text-[18px] text-slate-700">account_tree</span>
+      <span>1. Core Network Canvas & Evolution</span>
+      <span id="badge-node-count" class="bg-slate-200 text-slate-800 text-[10px] font-mono px-1.5 py-0.2 rounded-full border border-slate-300">8 Nodes</span>
+    </button>
+
+    <button onclick="switchTab('kingpin-tab')" id="tab-btn-kingpin" class="tab-btn flex items-center gap-2 px-4 py-3 font-semibold text-slate-600 hover:text-slate-900 border-b-2 border-transparent transition-all cursor-pointer whitespace-nowrap">
+      <span class="material-symbols-outlined text-[18px] text-slate-600">radar</span>
+      <span>2. Kingpin Centralization</span>
+      <span id="badge-kingpin-count" class="bg-rose-100 text-rose-800 text-[10px] font-mono px-1.5 py-0.2 rounded-full border border-rose-200">5 Ranked</span>
+    </button>
+
+    <button onclick="switchTab('links-tab')" id="tab-btn-links" class="tab-btn flex items-center gap-2 px-4 py-3 font-semibold text-slate-600 hover:text-slate-900 border-b-2 border-transparent transition-all cursor-pointer whitespace-nowrap">
+      <span class="material-symbols-outlined text-[18px] text-slate-600">alt_route</span>
+      <span>3. Suspected Hidden Links</span>
+      <span id="badge-links-count" class="bg-amber-100 text-amber-800 text-[10px] font-mono px-1.5 py-0.2 rounded-full border border-amber-200">2 Inferred</span>
+    </button>
+
+    <button onclick="switchTab('evidence-tab')" id="tab-btn-evidence" class="tab-btn flex items-center gap-2 px-4 py-3 font-semibold text-slate-600 hover:text-slate-900 border-b-2 border-transparent transition-all cursor-pointer whitespace-nowrap">
+      <span class="material-symbols-outlined text-[18px] text-slate-600">gavel</span>
+      <span>4. Evidence & Chain of Custody</span>
+      <span class="bg-emerald-100 text-emerald-800 text-[10px] font-mono px-1.5 py-0.2 rounded-full border border-emerald-200">10 Exhibits</span>
+    </button>
+  </nav>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="w-full px-6 py-6 bg-[#8292a5] flex-1 max-w-[1680px] mx-auto flex flex-col gap-6">
+
+    <!-- EMPTY STATE CARD (Displayed before Ingestion) -->
+    <div id="empty-state-card" class="bg-[#f1f5f9] border border-slate-300 rounded-xl p-12 text-center flex flex-col items-center justify-center gap-5 shadow-card my-auto">
+      <div class="w-16 h-16 rounded-xl bg-slate-200 border border-slate-300 flex items-center justify-center text-slate-700 shadow-sm">
+        <span class="material-symbols-outlined text-4xl">travel_explore</span>
+      </div>
+      <div class="max-w-md flex flex-col gap-2">
+        <h2 class="text-lg font-bold text-slate-900">No Active Investigation Loaded</h2>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          The forensic network canvas is unpopulated. Click the ingestion action below to ingest the syndicate CDR records and execute the Kingpin graph analytics engine.
+        </p>
+      </div>
+      <button onclick="loadAndAnalyzeNetwork()" class="flex items-center gap-2 bg-slate-800 hover:bg-slate-900 text-white font-semibold text-xs px-5 py-2.5 rounded-lg shadow-sm transition-all cursor-pointer">
+        <span class="material-symbols-outlined text-[18px]">cloud_sync</span>
+        <span>Generate / Ingest Network Data</span>
+      </button>
+      <div class="flex items-center gap-4 text-xs font-mono text-slate-500 pt-2">
+        <span>• Graph ML Centrality Profile</span>
+        <span>• Adamic-Adar Association</span>
+        <span>• Section 65B Evidence Certified</span>
+      </div>
+    </div>
+
+    <!-- TAB 1: CORE NETWORK CANVAS & TEMPORAL EVOLUTION -->
+    <div id="canvas-tab" class="tab-content flex flex-col gap-6 hidden">
+      
+      <!-- Top Action Bar & Filter Chips -->
+      <div class="bg-[#f1f5f9] p-5 rounded-xl border border-slate-300 shadow-card flex flex-col gap-4">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div class="flex flex-wrap items-center gap-3">
+            <span class="px-2.5 py-1 rounded-md bg-rose-50 border border-rose-200 text-rose-800 font-mono text-xs font-semibold flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-rose-600 animate-pulse"></span>
+              CONFIDENTIAL // LAW ENFORCEMENT EXHIBIT
+            </span>
+            <div class="flex items-center gap-2 font-mono text-xs text-slate-600">
+              <span class="text-slate-800 font-bold bg-slate-200 px-2 py-0.5 rounded border border-slate-300">CASE #902-CRIMNET</span>
+              <span class="text-slate-400">/</span>
+              <span class="text-slate-800 font-medium">Operation Viper Hawk Illicit Syndicate</span>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex items-center gap-2.5">
+            <button onclick="triggerAnalyze()" class="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-medium text-xs transition-all shadow-xs cursor-pointer">
+              <span class="material-symbols-outlined text-[17px] text-slate-600">radar</span>
+              <span>Run Network Analytics</span>
+            </button>
+            <button onclick="switchTab('links-tab')" class="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-slate-200 hover:bg-slate-300/80 border border-slate-300 text-slate-800 font-medium text-xs transition-all shadow-xs cursor-pointer">
+              <span class="material-symbols-outlined text-[17px] text-slate-600">alt_route</span>
+              <span>Predict Hidden Links (<span class="font-bold text-slate-700" id="pred-badge-count-canvas">2</span>)</span>
+            </button>
+            <button onclick="downloadPdfDossier()" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-800 text-white font-medium text-xs transition-all shadow-sm cursor-pointer">
+              <span class="material-symbols-outlined text-[17px]">picture_as_pdf</span>
+              <span>Export Dossier (PDF)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter Chips Row -->
+        <div class="flex flex-wrap items-center gap-2 pt-3 border-t border-slate-300">
+          <span class="text-xs text-slate-600 font-semibold mr-1 flex items-center gap-1">
+            <span class="material-symbols-outlined text-[16px] text-slate-600">filter_alt</span> Filter Nodes:
+          </span>
+          <button onclick="applyNodeTypeFilter('all')" class="filter-chip px-3 py-1.5 rounded-full bg-slate-700 text-white font-medium flex items-center gap-1.5 transition-all text-xs shadow-xs" data-type="all">
+            <span>All (<span id="count-all">8</span>)</span>
+          </button>
+          <button onclick="applyNodeTypeFilter('person')" class="filter-chip px-3 py-1.5 rounded-full bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 flex items-center gap-1.5 transition-all text-xs" data-type="person">
+            <span class="w-2 h-2 rounded-full bg-rose-500"></span> Suspects
+          </button>
+          <button onclick="applyNodeTypeFilter('phone')" class="filter-chip px-3 py-1.5 rounded-full bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 flex items-center gap-1.5 transition-all text-xs" data-type="phone">
+            <span class="w-2 h-2 rounded-full bg-amber-500"></span> Phone / CDR
+          </button>
+          <button onclick="applyNodeTypeFilter('org')" class="filter-chip px-3 py-1.5 rounded-full bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 flex items-center gap-1.5 transition-all text-xs" data-type="org">
+            <span class="w-2 h-2 rounded-full bg-slate-600"></span> Shell Org
+          </button>
+          <button onclick="applyNodeTypeFilter('safehouse')" class="filter-chip px-3 py-1.5 rounded-full bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 flex items-center gap-1.5 transition-all text-xs" data-type="safehouse">
+            <span class="w-2 h-2 rounded-full bg-sky-500"></span> Safehouse
+          </button>
+          <button onclick="applyNodeTypeFilter('tx')" class="filter-chip px-3 py-1.5 rounded-full bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 flex items-center gap-1.5 transition-all text-xs" data-type="tx">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Transactions
+          </button>
+          <button onclick="applyNodeTypeFilter('vehicle')" class="filter-chip px-3 py-1.5 rounded-full bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 flex items-center gap-1.5 transition-all text-xs" data-type="vehicle">
+            <span class="w-2 h-2 rounded-full bg-slate-500"></span> Vehicle
+          </button>
+        </div>
+      </div>
+
+      <!-- DEDICATED TEMPORAL EVOLUTION SLIDER & PLAYBACK DECK -->
+      <div class="bg-[#f1f5f9] p-5 rounded-xl border border-slate-300 shadow-card flex flex-col gap-4">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <!-- Title & Playback Controls -->
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-slate-800 text-white flex items-center justify-center shadow-xs">
+              <span class="material-symbols-outlined text-[20px]">linear_scale</span>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="font-bold text-xs uppercase tracking-wider text-slate-900">Temporal Evolution Slider</h3>
+                <span class="bg-rose-100 text-rose-800 text-[10px] font-mono px-2 py-0.5 rounded font-bold">CHRONOLOGICAL REPLAY</span>
+              </div>
+              <span class="text-[11px] text-slate-500 font-mono">Scrub the slider or play time-lapse to inspect the sequential formation of the criminal network</span>
+            </div>
+          </div>
+
+          <!-- Player Controls & Current Date Badge -->
+          <div class="flex items-center gap-2 font-mono text-xs">
+            <button id="btn-play-timeline" onclick="toggleTimelinePlay()" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-900 text-white font-semibold shadow-xs transition-all cursor-pointer">
+              <span class="material-symbols-outlined text-[16px]" id="play-icon">play_arrow</span>
+              <span id="play-text">Play Time-Lapse</span>
+            </button>
+            <button onclick="stepTimeline(-1)" class="w-8 h-8 rounded-lg bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 flex items-center justify-center shadow-2xs transition-colors cursor-pointer" title="Previous Detected Milestone">
+              <span class="material-symbols-outlined text-[17px]">skip_previous</span>
+            </button>
+            <button onclick="stepTimeline(1)" class="w-8 h-8 rounded-lg bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 flex items-center justify-center shadow-2xs transition-colors cursor-pointer" title="Next Detected Milestone">
+              <span class="material-symbols-outlined text-[17px]">skip_next</span>
+            </button>
+            <button onclick="setTimelineStep(7)" class="px-2.5 h-8 rounded-lg bg-white hover:bg-slate-100 border border-slate-300 text-slate-600 text-xs font-mono transition-colors cursor-pointer" title="Show All Dates">
+              <span>All</span>
+            </button>
+            <div class="bg-white border border-slate-300 px-3.5 py-1.5 rounded-lg font-bold text-slate-900 text-xs shadow-2xs flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-rose-600 animate-pulse"></span>
+              <span id="time-cutoff-badge">Cutoff: 2026-08-14 (ALL 8 ENTITIES)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Full-Width Interactive Timeline Range Slider -->
+        <div class="flex flex-col gap-2.5 pt-1">
+          <div class="relative w-full flex items-center">
+            <input class="w-full h-3 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-slate-800 shadow-inner focus:outline-none focus:ring-2 focus:ring-slate-400" id="temporal-slider" min="0" max="7" step="1" value="7" oninput="onTemporalSliderChange(this.value)"/>
+          </div>
+          
+          <!-- Timeline Milestones Ticks Row -->
+          <div class="grid grid-cols-8 gap-2 text-[10px] font-mono select-none" id="timeline-milestones-row">
+            <div onclick="setTimelineStep(0)" id="milestone-step-0" class="timeline-milestone p-1.5 rounded-lg bg-white border border-slate-300 cursor-pointer hover:border-slate-500 transition-all text-center shadow-2xs">
+              <div class="font-bold text-slate-900">Nov 2025</div>
+              <div class="text-[9px] text-slate-500 truncate">1. Kingpin</div>
+            </div>
+            <div onclick="setTimelineStep(1)" id="milestone-step-1" class="timeline-milestone p-1.5 rounded-lg bg-white border border-slate-300 cursor-pointer hover:border-slate-500 transition-all text-center shadow-2xs">
+              <div class="font-bold text-slate-900">Jan 2026</div>
+              <div class="text-[9px] text-slate-500 truncate">2. Apex Shell</div>
+            </div>
+            <div onclick="setTimelineStep(2)" id="milestone-step-2" class="timeline-milestone p-1.5 rounded-lg bg-white border border-slate-300 cursor-pointer hover:border-slate-500 transition-all text-center shadow-2xs">
+              <div class="font-bold text-slate-900">Feb 14</div>
+              <div class="text-[9px] text-slate-500 truncate">3. HK Shell</div>
+            </div>
+            <div onclick="setTimelineStep(3)" id="milestone-step-3" class="timeline-milestone p-1.5 rounded-lg bg-white border border-slate-300 cursor-pointer hover:border-slate-500 transition-all text-center shadow-2xs">
+              <div class="font-bold text-slate-900">Feb 19</div>
+              <div class="text-[9px] text-slate-500 truncate">4. Safehouse</div>
+            </div>
+            <div onclick="setTimelineStep(4)" id="milestone-step-4" class="timeline-milestone p-1.5 rounded-lg bg-white border border-slate-300 cursor-pointer hover:border-slate-500 transition-all text-center shadow-2xs">
+              <div class="font-bold text-slate-900">Mar 2026</div>
+              <div class="text-[9px] text-slate-500 truncate">5. Burner SIM</div>
+            </div>
+            <div onclick="setTimelineStep(5)" id="milestone-step-5" class="timeline-milestone p-1.5 rounded-lg bg-white border border-slate-300 cursor-pointer hover:border-slate-500 transition-all text-center shadow-2xs">
+              <div class="font-bold text-slate-900">Apr 2026</div>
+              <div class="text-[9px] text-slate-500 truncate">6. Hawala Wire</div>
+            </div>
+            <div onclick="setTimelineStep(6)" id="milestone-step-6" class="timeline-milestone p-1.5 rounded-lg bg-white border border-slate-300 cursor-pointer hover:border-slate-500 transition-all text-center shadow-2xs">
+              <div class="font-bold text-slate-900">Jun 14</div>
+              <div class="text-[9px] text-slate-500 truncate">7. Liaison</div>
+            </div>
+            <div onclick="setTimelineStep(7)" id="milestone-step-7" class="timeline-milestone p-1.5 rounded-lg bg-slate-800 text-white border border-slate-800 cursor-pointer hover:bg-slate-900 transition-all text-center shadow-2xs">
+              <div class="font-bold text-white">Present</div>
+              <div class="text-[9px] text-slate-300 truncate">8. Full (All)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Graph Canvas & Inspector Grid -->
+      <div class="grid grid-cols-12 gap-6 items-start w-full">
+        
+        <!-- Left: SVG Architectural Graph Canvas (8 cols) -->
+        <div class="col-span-12 xl:col-span-8 flex flex-col gap-4">
+          <div class="relative bg-[#f8fafc] rounded-xl border border-slate-300 shadow-card overflow-hidden min-h-[620px] flex flex-col">
+            
+            <!-- Canvas Floating Top Toolbar -->
+            <div class="absolute top-4 left-4 right-4 z-20 flex items-center justify-between pointer-events-none">
+              <div class="flex items-center gap-2 bg-[#f1f5f9]/95 backdrop-blur-sm border border-slate-300 px-3.5 py-1.5 rounded-lg shadow-sm pointer-events-auto">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="font-mono text-xs text-slate-800 font-semibold">NEO4J FORENSIC CANVAS</span>
+                <span class="text-slate-500 text-[11px] font-mono">| DRAG NODES TO REARRANGE</span>
+              </div>
+              <div class="flex items-center gap-1.5 bg-[#f1f5f9]/95 backdrop-blur-sm border border-slate-300 p-1.5 rounded-lg shadow-sm pointer-events-auto">
+                <button onclick="resetNodeLayoutPositions()" class="px-2.5 h-8 rounded flex items-center gap-1 text-slate-700 hover:bg-slate-200 text-xs font-mono font-medium transition-colors cursor-pointer" title="Reset Node Layout Coordinates">
+                  <span class="material-symbols-outlined text-[17px]">reorder</span>
+                  <span>Reset Layout</span>
+                </button>
+                <div class="h-4 w-px bg-slate-300"></div>
+                <button onclick="zoomCanvas(1.2)" class="w-8 h-8 rounded flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors cursor-pointer" title="Zoom In">
+                  <span class="material-symbols-outlined text-[19px]">add</span>
+                </button>
+                <button onclick="zoomCanvas(0.8)" class="w-8 h-8 rounded flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors cursor-pointer" title="Zoom Out">
+                  <span class="material-symbols-outlined text-[19px]">remove</span>
+                </button>
+                <button onclick="resetCanvasView()" class="w-8 h-8 rounded flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors cursor-pointer" title="Fit to Screen">
+                  <span class="material-symbols-outlined text-[19px]">filter_center_focus</span>
+                </button>
+                <button onclick="toggleNodeLabelsDisplay()" class="px-2.5 h-8 rounded flex items-center gap-1 text-slate-600 hover:bg-slate-200 text-xs font-mono transition-colors cursor-pointer" title="Toggle Real Name / Alias">
+                  <span class="material-symbols-outlined text-[16px]">badge</span>
+                  <span id="label-mode-text">Alias</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Graph Legend (Bottom Left) -->
+            <div class="absolute bottom-4 left-4 z-20 bg-[#f1f5f9]/95 backdrop-blur-sm border border-slate-300 p-3 rounded-lg shadow-sm pointer-events-auto flex flex-col gap-2 font-mono text-[11px]">
+              <div class="text-slate-600 font-semibold uppercase tracking-wider text-[10px]">Forensic Classification & Links</div>
+              <div class="flex items-center gap-3.5">
+                <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-rose-600"></span><span class="text-slate-700">&gt;0.85 Kingpin</span></div>
+                <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span><span class="text-slate-700">0.65–0.85 High Broker</span></div>
+                <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-slate-600"></span><span class="text-slate-700">0.40–0.65 Med</span></div>
+                <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span><span class="text-slate-700">&lt;0.40 Asset</span></div>
+              </div>
+              <div class="flex items-center gap-2 pt-1 border-t border-slate-300">
+                <span class="w-4 border-b-2 border-dashed border-pink-500"></span>
+                <span class="text-pink-700 font-bold">Focused Covert Association (Adamic-Adar)</span>
+              </div>
+            </div>
+
+            <!-- SVG Visualizer (viewBox 0 0 1000 620 for clean uncrowded layout) -->
+            <svg class="w-full h-[620px] bg-slate-100/50 select-none" id="network-svg" viewBox="0 0 1000 620">
+              <defs>
+                <filter height="180%" id="node-shadow" width="180%" x="-40%" y="-40%">
+                  <feDropShadow dx="0" dy="2" flood-color="#0f172a" flood-opacity="0.1" stdDeviation="3"></feDropShadow>
+                </filter>
+                <marker id="arrow-slate" markerheight="6" markerwidth="6" orient="auto-start-reverse" refx="20" refy="5" viewbox="0 0 10 10">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"></path>
+                </marker>
+                <marker id="arrow-crimson" markerheight="6" markerwidth="6" orient="auto-start-reverse" refx="22" refy="5" viewbox="0 0 10 10">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#dc2626"></path>
+                </marker>
+                <marker id="arrow-predicted" markerheight="6" markerwidth="6" orient="auto-start-reverse" refx="20" refy="5" viewbox="0 0 10 10">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"></path>
+                </marker>
+                <marker id="arrow-highlighted" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="22" refy="5" viewbox="0 0 10 10">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#ec4899"></path>
+                </marker>
+                <pattern height="24" id="grid-dots" patternunits="userSpaceOnUse" width="24">
+                  <circle cx="2" cy="2" fill="#94a3b8" r="1.1"></circle>
+                </pattern>
+              </defs>
+              <rect fill="url(#grid-dots)" height="100%" width="100%"></rect>
+
+              <g id="viewport-group">
+                <g id="edges-layer"></g>
+                <g id="predicted-edges-layer"></g>
+                <g id="nodes-layer"></g>
+              </g>
+            </svg>
+
+            <!-- Floating Tooltip -->
+            <div class="absolute hidden pointer-events-none z-30 bg-white border border-slate-300 p-3 rounded-lg shadow-xl font-mono text-[11px] flex flex-col gap-1 text-slate-900" id="node-tooltip">
+              <div class="font-bold text-slate-900 text-xs" id="tip-title">Entity Details</div>
+              <div class="text-slate-500 text-[10px]" id="tip-sub">Neo4j Record</div>
+              <div class="text-rose-700 font-semibold" id="tip-score">Score: 0.94</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Forensic Node Inspector & Evidence (4 cols) -->
+        <div class="col-span-12 xl:col-span-4 flex flex-col gap-4">
+          <div class="bg-[#f1f5f9] p-5 rounded-xl border border-slate-300 shadow-card flex flex-col gap-4">
+            
+            <!-- Selected Entity Header -->
+            <div class="flex flex-col gap-3 pb-3 border-b border-slate-300">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-mono text-slate-500 font-medium flex items-center gap-1.5" id="inspector-endpoint">
+                  <span class="material-symbols-outlined text-[15px] text-slate-600">verified_user</span> GET /entity/node-razor
+                </span>
+                <span class="px-2 py-0.5 rounded bg-rose-50 border border-rose-200 font-mono text-[10px] font-bold text-rose-800" id="inspector-priority-tag">
+                  PRIORITY 1 TARGET
+                </span>
+              </div>
+              <div class="flex items-center gap-3.5">
+                <div class="w-12 h-12 rounded-xl bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-700 shrink-0" id="inspector-icon-box">
+                  <span class="material-symbols-outlined text-[26px]" id="inspector-icon">person</span>
+                </div>
+                <div class="flex flex-col min-w-0">
+                  <h3 class="font-bold text-base text-slate-900 truncate" id="inspector-name">Vikram "Razor" Malhotra</h3>
+                  <span class="text-xs font-mono text-slate-500 truncate" id="inspector-alias">Alias: V-Razor, Tiger-09, Boss-DXB</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Threat Index Banner -->
+            <div class="bg-rose-50/70 border border-rose-200 p-3 rounded-lg flex items-center justify-between text-xs font-mono" id="inspector-threat-banner">
+              <div class="flex items-center gap-2 text-rose-800 font-bold" id="inspector-threat-level">
+                <span class="material-symbols-outlined text-[18px] text-rose-600">warning</span>
+                <span id="inspector-tier-text">CRITICAL KINGPIN</span>
+              </div>
+              <span class="text-rose-900 font-extrabold text-sm" id="inspector-score-text">0.94 / 1.0</span>
+            </div>
+
+            <!-- Metric Radar/Bar Table -->
+            <div class="bg-white border border-slate-300 p-3.5 rounded-lg flex flex-col gap-3 font-mono text-xs">
+              <div class="flex justify-between items-center text-[10px] text-slate-500">
+                <span>CENTRALITY METRIC PROFILE</span>
+                <span class="text-slate-700 font-semibold">LE-CONFIRMED</span>
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <div class="flex justify-between text-xs">
+                  <span class="text-slate-600" title="Key Broker / Intermediary between criminal cells">Key Broker / Intermediary</span>
+                  <span class="text-slate-900 font-bold" id="inspector-bw">0.89</span>
+                </div>
+                <div class="w-full bg-slate-200 h-2 rounded overflow-hidden">
+                  <div class="bg-slate-600 h-full rounded transition-all duration-300" id="inspector-bw-bar" style="width: 89%"></div>
+                </div>
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <div class="flex justify-between text-xs">
+                  <span class="text-slate-600" title="Influence rating across syndicate hierarchy">Influence Rating</span>
+                  <span class="text-slate-900 font-bold" id="inspector-pr">0.96</span>
+                </div>
+                <div class="w-full bg-slate-200 h-2 rounded overflow-hidden">
+                  <div class="bg-slate-600 h-full rounded transition-all duration-300" id="inspector-pr-bar" style="width: 96%"></div>
+                </div>
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <div class="flex justify-between text-xs">
+                  <span class="text-slate-600" id="inspector-deg-label" title="Direct telephone calls, meetings & transfers">Direct Connections (38 Conns)</span>
+                  <span class="text-slate-900 font-bold" id="inspector-deg">0.82</span>
+                </div>
+                <div class="w-full bg-slate-200 h-2 rounded overflow-hidden">
+                  <div class="bg-slate-600 h-full rounded transition-all duration-300" id="inspector-deg-bar" style="width: 82%"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Entity Metadata -->
+            <div class="flex flex-col gap-1.5 font-mono text-xs">
+              <span class="text-slate-600 text-[10px] uppercase font-semibold">Entity Metadata</span>
+              <div class="bg-white border border-slate-300 rounded-lg p-3 flex flex-col gap-2 text-xs">
+                <div class="flex justify-between py-1 border-b border-slate-200">
+                  <span class="text-slate-500">Neo4j Node ID:</span>
+                  <span class="text-slate-800 font-semibold" id="inspector-node-id">neo4j://node/84920</span>
+                </div>
+                <div class="flex justify-between py-1 border-b border-slate-200">
+                  <span class="text-slate-500">First Detected:</span>
+                  <span class="text-slate-700 font-bold text-rose-800" id="inspector-date">2025-11-04 (Earliest)</span>
+                </div>
+                <div class="flex justify-between py-1">
+                  <span class="text-slate-500">Topology:</span>
+                  <span class="text-slate-800 font-bold" id="inspector-topology">24 In // 14 Out</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Focus Link Dossier Box (Populated when Focus Link is clicked) -->
+            <div id="inspector-focus-box" class="hidden bg-pink-50 border-2 border-pink-300 p-3.5 rounded-lg flex flex-col gap-2 font-mono text-xs shadow-xs">
+              <div class="flex items-center justify-between text-pink-900 font-bold">
+                <span class="flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-[18px] text-pink-700">center_focus_strong</span>
+                  FOCUSED COVERT ASSOCIATION
+                </span>
+                <span class="bg-pink-200 text-pink-900 px-2 py-0.5 rounded text-[10px]" id="focus-conf-text">89.4% CONF</span>
+              </div>
+              <div class="text-[11px] text-pink-950 leading-relaxed font-sans" id="focus-desc-text">
+                Direct clandestine corridor detected between target High Command and Cartel Liaison through intermediate burner lines.
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="pt-1 font-mono text-xs">
+              <button onclick="downloadPdfDossier()" class="w-full px-3 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-900 text-white font-medium flex items-center justify-center gap-2 transition-colors shadow-sm cursor-pointer">
+                <span class="material-symbols-outlined text-[16px]">picture_as_pdf</span>
+                Export Complete Intelligence Dossier (PDF)
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: KINGPIN CENTRALIZATION -->
+    <div id="kingpin-tab" class="tab-content flex flex-col gap-6 hidden">
+      <!-- Summary Highlights Row -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-[#f1f5f9] border border-rose-200 p-5 rounded-xl shadow-card flex items-center justify-between">
+          <div>
+            <span class="text-xs font-mono text-rose-800 uppercase font-semibold">Primary Kingpin / Orchestrator</span>
+            <h4 class="text-base font-bold text-slate-900 mt-1">Vikram "Razor" Malhotra (0.94)</h4>
+            <span class="text-xs text-slate-500 font-mono">Controls 95% of illicit logistical routing</span>
+          </div>
+          <div class="w-11 h-11 rounded-xl bg-rose-100 border border-rose-200 flex items-center justify-center text-rose-700">
+            <span class="material-symbols-outlined text-2xl">local_police</span>
+          </div>
+        </div>
+
+        <div class="bg-[#f1f5f9] border border-amber-200 p-5 rounded-xl shadow-card flex items-center justify-between">
+          <div>
+            <span class="text-xs font-mono text-amber-800 uppercase font-semibold">Critical Intermediary / Broker</span>
+            <h4 class="text-base font-bold text-slate-900 mt-1">Apex Global Logistics LLC (0.82)</h4>
+            <span class="text-xs text-slate-500 font-mono">Connects 3 disjoint money laundering cells</span>
+          </div>
+          <div class="w-11 h-11 rounded-xl bg-amber-100 border border-amber-200 flex items-center justify-center text-amber-700">
+            <span class="material-symbols-outlined text-2xl">hub</span>
+          </div>
+        </div>
+
+        <div class="bg-[#f1f5f9] border border-slate-300 p-5 rounded-xl shadow-card flex items-center justify-between">
+          <div>
+            <span class="text-xs font-mono text-slate-700 uppercase font-semibold">Syndicate Vulnerability Index</span>
+            <h4 class="text-base font-bold text-slate-900 mt-1">High Clustering (0.78)</h4>
+            <span class="text-xs text-slate-500 font-mono">Targeting top 2 actors degrades syndicate by 64%</span>
+          </div>
+          <div class="w-11 h-11 rounded-xl bg-slate-200 border border-slate-300 flex items-center justify-center text-slate-700">
+            <span class="material-symbols-outlined text-2xl">crisis_alert</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ranked Leaderboard Cards Grid -->
+      <div class="bg-[#f1f5f9] p-6 rounded-xl border border-slate-300 shadow-card flex flex-col gap-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-300">
+          <div class="flex items-center gap-2.5">
+            <span class="material-symbols-outlined text-rose-700 text-xl">military_tech</span>
+            <h3 class="font-bold text-sm text-slate-900">Syndicate Hierarchy & Centrality Threat Rankings</h3>
+          </div>
+          <span class="text-xs font-mono text-slate-500">Weight: Brokerage (40%) + Influence (35%) + Contacts (25%)</span>
+        </div>
+
+        <div id="kingpin-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: SUSPECTED HIDDEN LINKS -->
+    <div id="links-tab" class="tab-content flex flex-col gap-6 hidden">
+      <!-- Confidence & Recompute Toolbar -->
+      <div class="bg-[#f1f5f9] p-5 rounded-xl border border-slate-300 shadow-card flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-amber-100 border border-amber-200 flex items-center justify-center text-amber-700">
+            <span class="material-symbols-outlined text-xl">alt_route</span>
+          </div>
+          <div>
+            <h3 class="font-bold text-sm text-slate-900">Suspected Hidden Associations Engine</h3>
+            <span class="text-xs text-slate-500 font-mono">Topological Link Prediction (Adamic-Adar / Jaccard Similarity)</span>
+          </div>
+        </div>
+
+        <!-- Dynamic Confidence Threshold Slider -->
+        <div class="flex items-center gap-4 bg-white border border-slate-300 px-4 py-2 rounded-lg text-xs font-mono shadow-xs">
+          <span class="text-slate-600 font-medium">Confidence Threshold:</span>
+          <input type="range" id="confidence-slider" min="0.5" max="0.95" step="0.05" value="0.75" oninput="onConfidenceSliderChange(this.value)" class="w-32 h-1.5 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-slate-600">
+          <span id="confidence-value-badge" class="font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded border border-slate-300">≥ 0.75</span>
+        </div>
+
+        <button onclick="triggerRecompute()" class="flex items-center gap-2 bg-slate-800 hover:bg-slate-900 text-white font-medium text-xs px-4 py-2 rounded-lg shadow-sm transition-all cursor-pointer">
+          <span class="material-symbols-outlined text-[17px]">sync</span>
+          <span>Recompute Inferred Associations</span>
+        </button>
+      </div>
+
+      <!-- Candidate Inferred Links Grid -->
+      <div class="bg-[#f1f5f9] p-6 rounded-xl border border-slate-300 shadow-card flex flex-col gap-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-300">
+          <h3 class="font-bold text-sm text-slate-900">Top Unobserved Covert Links</h3>
+          <span id="predicted-count-summary" class="text-xs font-mono text-slate-600">2 Inferred Associations Meeting Threshold (≥ 0.75)</span>
+        </div>
+
+        <div id="predicted-links-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: EVIDENCE & CHAIN OF CUSTODY -->
+    <div id="evidence-tab" class="tab-content flex flex-col gap-6 hidden">
+      <div class="bg-[#f1f5f9] p-6 rounded-xl border border-slate-300 shadow-card flex flex-col gap-5">
+        <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-300">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-slate-800 text-white flex items-center justify-center shadow-sm">
+              <span class="material-symbols-outlined text-2xl">gavel</span>
+            </div>
+            <div>
+              <h3 class="font-bold text-base text-slate-900">Forensic Evidence Registry & Sec. 65B Chain of Custody</h3>
+              <span class="text-xs font-mono text-slate-500">Indian Evidence Act Sec. 65B Cryptographically Verified Exhibits</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 font-mono text-xs">
+            <span class="bg-emerald-100 text-emerald-800 border border-emerald-200 px-3 py-1 rounded-md font-bold flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-600"></span> ALL 10 EXHIBITS VERIFIED
+            </span>
+          </div>
+        </div>
+
+        <!-- Evidence Cards Grid -->
+        <div id="evidence-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <!-- HIDDEN PDF REPORT CONTAINER FOR HTML2PDF -->
+    <div id="pdf-report-content" class="hidden p-8 text-slate-950 bg-white font-mono text-xs">
+      <div style="border-bottom: 2px solid #0f172a; padding-bottom: 16px; margin-bottom: 20px;">
+        <h1 style="font-size: 20px; font-weight: bold; margin: 0 0 6px 0;">CONFIDENTIAL LAW ENFORCEMENT INTELLIGENCE EXHIBIT</h1>
+        <h2 style="font-size: 13px; color: #475569; margin: 0;">CASE #902-CRIMNET: OPERATION VIPER SYNDICATE NETWORK & CENTRALITY REPORT</h2>
+        <div style="margin-top: 10px; font-size: 10px; color: #64748b;">Generated: <span id="pdf-gen-date"></span> | Classification: TIER 1 RESTRICTED</div>
+      </div>
+
+      <h3 style="font-size: 13px; font-weight: bold; margin: 16px 0 8px 0; text-transform: uppercase;">1. Kingpin Centrality Threat Leaderboard</h3>
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 10px;" border="1" cellpadding="6">
+        <thead>
+          <tr style="background-color: #e2e8f0;">
+            <th>Rank</th>
+            <th>Target Name / Entity</th>
+            <th>Type / Role</th>
+            <th>Kingpin Threat Score</th>
+            <th>Brokerage</th>
+            <th>Influence</th>
+            <th>Connections</th>
+          </tr>
+        </thead>
+        <tbody id="pdf-kingpin-tbody"></tbody>
+      </table>
+
+      <h3 style="font-size: 13px; font-weight: bold; margin: 16px 0 8px 0; text-transform: uppercase;">2. Inferred Covert Associations (Topological ML)</h3>
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 10px;" border="1" cellpadding="6">
+        <thead>
+          <tr style="background-color: #e2e8f0;">
+            <th>Source Entity</th>
+            <th>Target Entity</th>
+            <th>Confidence</th>
+            <th>Adamic-Adar</th>
+            <th>Evidence Corridor / Shared Nodes</th>
+          </tr>
+        </thead>
+        <tbody id="pdf-links-tbody"></tbody>
+      </table>
+
+      <h3 style="font-size: 13px; font-weight: bold; margin: 16px 0 8px 0; text-transform: uppercase;">3. Evidence & Chain of Custody Audit Ledger</h3>
+      <div id="pdf-evidence-summary" style="font-size: 9.5px; line-height: 1.5; color: #334155;"></div>
+    </div>
+
+  </main>
+
+  <!-- JAVASCRIPT & GRAPH ENGINE -->
+  <script>
+    // Chronological investigation dataset
+    const syndicateNodes = [
+      { id: "node-razor", label: "Vikram \"Razor\" Malhotra", name: "Vikram Malhotra", type: "person", role: "Syndicate High Command", date: "2025-11-04", metadata: { alias: "V-Razor, Tiger-09, Boss-DXB", threat: 0.94 } },
+      { id: "node-apex", label: "Apex Global Logistics LLC", name: "Apex Global Logistics", type: "org", role: "Shell Freight & Smuggling", date: "2026-01-15", metadata: { alias: "Apex FreeZone LLC", threat: 0.88 } },
+      { id: "node-panasian", label: "Pan-Asian HK Shell", name: "Pan-Asian HK", type: "org", role: "Hong Kong Wire Front", date: "2026-02-14", metadata: { alias: "HK-Front-88", threat: 0.48 } },
+      { id: "node-safehouse", label: "Safehouse Sector-4 Flat 9C", name: "Sector-4 Safehouse", type: "safehouse", role: "Location · Cache Facility", date: "2026-02-19", metadata: { alias: "Cache-Beta", threat: 0.64 } },
+      { id: "node-sim", label: "Burner SIM +91-98721-XXXXX", name: "Burner MSISDN +91-98721", type: "phone", role: "Encrypted Comms · Rotating IMEI", date: "2026-03-02", metadata: { alias: "SIM-Viper01", threat: 0.81 } },
+      { id: "node-hawala", label: "Hawala Node TR-994", name: "Hawala TR-994", type: "tx", role: "Financial · Offshore Settle", date: "2026-04-11", metadata: { alias: "Fin-Channel-99", threat: 0.59 } },
+      { id: "node-liaison", label: "D-Company Liaison Farhan", name: "Farhan Qureshi", type: "person", role: "Cartel Contact", date: "2026-06-14", metadata: { alias: "Farhan-KHI", threat: 0.62 } },
+      { id: "node-vehicle", label: "SUV MH-02-CD-9102", name: "Armored SUV", type: "vehicle", role: "Transport Asset", date: "2026-06-18", metadata: { alias: "Vehicle-V9", threat: 0.31 } }
+    ];
+
+    const syndicateEdges = [
+      { source: "node-razor", target: "node-sim", relationship_type: "CALLS (47x)", weight: 2.0, date: "2026-03-02" },
+      { source: "node-razor", target: "node-apex", relationship_type: "OWNS / CONTROLS (95%)", weight: 3.0, date: "2026-01-15" },
+      { source: "node-razor", target: "node-safehouse", relationship_type: "MEETS_AT (12x)", weight: 1.5, date: "2026-02-19" },
+      { source: "node-apex", target: "node-hawala", relationship_type: "TRANSACTS ($1.2M)", weight: 2.5, date: "2026-04-11" },
+      { source: "node-hawala", target: "node-liaison", relationship_type: "OFFSHORE ROUTE", weight: 1.8, date: "2026-06-14" },
+      { source: "node-safehouse", target: "node-vehicle", relationship_type: "PARKED_NEAR", weight: 1.0, date: "2026-06-18" },
+      { source: "node-apex", target: "node-panasian", relationship_type: "INVOICE FLOW", weight: 1.2, date: "2026-02-14" }
+    ];
+
+    const chronologicalDates = [
+      { date: "2025-11-04", label: "Nov 2025: Kingpin Vikram Malhotra Detected" },
+      { date: "2026-01-15", label: "Jan 2026: Apex Global Logistics Shell Flagged" },
+      { date: "2026-02-14", label: "Feb 14, 2026: Pan-Asian HK Front Linked" },
+      { date: "2026-02-19", label: "Feb 19, 2026: Safehouse Sector-4 Uncovered" },
+      { date: "2026-03-02", label: "Mar 02, 2026: Burner SIM Frequency Burst" },
+      { date: "2026-04-11", label: "Apr 11, 2026: Hawala Node TR-994 $1.2M Transfer" },
+      { date: "2026-06-14", label: "Jun 14, 2026: D-Company Liaison Contact" },
+      { date: "2026-08-14", label: "Present: Full Syndicate Topology (ALL 8 ENTITIES)" }
+    ];
+
+    const evidenceExhibits = [
+      { id: "EX-01", tag: "CDR TOWER DUMP", date: "2026-08-14", target: "Vikram Malhotra / Burner SIM", icon: "cell_tower", desc: "Cell Tower 14B Sector 9, 02:14:22 UTC. IMEI-IMSI pair match verified under Sec. 65B Certificate." },
+      { id: "EX-02", tag: "FIU FINANCIAL STR", date: "2026-07-29", target: "Hawala TR-994 / Apex Global", icon: "currency_exchange", desc: "$450,000 USD equivalent dispatched via Dubai OTC crypto off-ramp into Axis escrow accounts." },
+      { id: "EX-03", tag: "ANPR VEHICLE LOG", date: "2026-08-02", target: "SUV MH-02-CD-9102", icon: "videocam", desc: "CCTV Automated ANPR Capture: Armored SUV logged crossing Warehouse Gate 3 perimeter at 23:41 UTC." },
+      { id: "EX-04", tag: "SWIFT CLEARING SLIP", date: "2026-05-18", target: "Apex Global Logistics LLC", icon: "receipt_long", desc: "Circular invoice flow cross-collateralized via offshore SPV with Hawala Node TR-994." },
+      { id: "EX-05", tag: "SATELLITE ROAMING DUMP", date: "2026-07-02", target: "Farhan Liaison", icon: "satellite_alt", desc: "Encrypted satellite channel handshake detected matching Dubai uplink frequency." },
+      { id: "EX-06", tag: "SURVEILLANCE STAKEOUT", date: "2026-07-10", target: "Safehouse Sector-4", icon: "visibility", desc: "Physical surveillance observed 12 clandestine meetings between courier cell and sector operatives." },
+      { id: "EX-07", tag: "DISPERSAL LEDGER ENTRY", date: "2026-05-28", target: "Hawala Node TR-994", icon: "account_balance_wallet", desc: "Seized encrypted ledger recorded $1.2M remittance dispatched across 4 separate mule accounts." },
+      { id: "EX-08", tag: "CORPORATE REGISTRY SLIP", date: "2026-02-14", target: "Pan-Asian HK Shell", icon: "domain", desc: "Shared registered corporate agent address in Ras Al Khaimah and cross-collateralized HK wire front." },
+      { id: "EX-09", tag: "ROTATING IMEI DUMP", date: "2026-03-02", target: "Burner SIM +91-98721", icon: "smartphone", desc: "47 burst voice sessions registered with High Command within a 3-hour nocturnal window." },
+      { id: "EX-10", tag: "BALLISTIC CACHE INVENTORY", date: "2026-06-18", target: "Safehouse Sector-4 Flat 9C", icon: "inventory_2", desc: "Cache search recovered encrypted satellite modems, 8 burner handsets, and tactical GPS transponders." }
+    ];
+
+    // Default coordinate map spaced out across 1000x620 canvas
+    const defaultNodePositions = {
+      "node-razor": { x: 440, y: 260 },
+      "node-sim": { x: 180, y: 130 },
+      "node-safehouse": { x: 270, y: 460 },
+      "node-vehicle": { x: 100, y: 470 },
+      "node-apex": { x: 700, y: 140 },
+      "node-panasian": { x: 890, y: 160 },
+      "node-hawala": { x: 670, y: 390 },
+      "node-liaison": { x: 890, y: 460 }
+    };
+    let nodePositions = JSON.parse(JSON.stringify(defaultNodePositions));
+
+    // State Variables
+    let currentNetworkData = null;
+    let analysisResult = null;
+    let activeNodeTypeFilter = "all";
+    let activeConfidenceThreshold = 0.75;
+    let currentTimelineIndex = 7;
+    let activeTemporalDate = "2026-08-14";
+    let labelModeAlias = false;
+    let selectedNodeId = 'node-razor';
+    let focusedLinkId = null;
+    let timelinePlayInterval = null;
+
+    // Viewport transform & Drag state
+    let viewZoom = 1;
+    let viewPanX = 0;
+    let viewPanY = 0;
+    let isPanning = false;
+    let panStartX = 0;
+    let panStartY = 0;
+
+    // Node Dragging State
+    let draggingNodeId = null;
+    let nodeDragMoved = false;
+    let dragStartMousePos = { x: 0, y: 0 };
+    let dragNodeStartPos = { x: 0, y: 0 };
+
+    function resetNodeLayoutPositions() {
+      nodePositions = JSON.parse(JSON.stringify(defaultNodePositions));
+      renderAllViews();
+    }
+
+    // --- TAB SWITCHING ---
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('tab-active'));
+      
+      const targetTab = document.getElementById(tabId);
+      if (targetTab) targetTab.classList.remove('hidden');
+
+      if (tabId === 'canvas-tab') document.getElementById('tab-btn-canvas').classList.add('tab-active');
+      if (tabId === 'kingpin-tab') document.getElementById('tab-btn-kingpin').classList.add('tab-active');
+      if (tabId === 'links-tab') document.getElementById('tab-btn-links').classList.add('tab-active');
+      if (tabId === 'evidence-tab') document.getElementById('tab-btn-evidence').classList.add('tab-active');
+    }
+
+    // --- INGESTION & API INTEGRATION ---
+    async function loadAndAnalyzeNetwork() {
+      const topBtn = document.getElementById('btn-ingest-top');
+      if (topBtn) {
+        topBtn.innerHTML = `<span class="material-symbols-outlined text-[16px] animate-spin">refresh</span> Ingesting...`;
+        topBtn.disabled = true;
+      }
+
+      try {
+        currentNetworkData = {
+          nodes: syndicateNodes,
+          edges: syndicateEdges,
+          link_prediction_threshold: 0.5
+        };
+
+        const response = await fetch('/api/v1/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(currentNetworkData)
+        });
+
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        analysisResult = await response.json();
+      } catch (err) {
+        console.warn("Local intelligence fallback active:", err);
+        simulateFallback();
+      } finally {
+        document.getElementById('empty-state-card').classList.add('hidden');
+        switchTab('canvas-tab');
+        renderAllViews();
+        renderEvidenceCards();
+
+        if (topBtn) {
+          topBtn.innerHTML = `<span class="material-symbols-outlined text-[16px]">cloud_sync</span> Generate / Ingest Network`;
+          topBtn.disabled = false;
+        }
+      }
+    }
+
+    function simulateFallback() {
+      analysisResult = {
+        status: "success",
+        summary: { total_nodes: 8, total_edges: 7, kingpin: "Vikram \"Razor\" Malhotra" },
+        kingpin_rankings: [
+          { node_id: "node-razor", label: "Vikram \"Razor\" Malhotra", type: "person", kingpin_score: 0.94, tier: "CRITICAL", level: "HIGH", centrality: { betweenness: 0.89, pagerank: 0.96, degree: 0.82, connections_count: 38 }, metadata: { alias: "V-Razor, Tiger-09, Boss-DXB", role: "Syndicate High Command" } },
+          { node_id: "node-apex", label: "Apex Global Logistics LLC", type: "org", kingpin_score: 0.88, tier: "HIGH", level: "HIGH", centrality: { betweenness: 0.82, pagerank: 0.85, degree: 0.74, connections_count: 24 }, metadata: { alias: "Apex FreeZone LLC", role: "Shell Freight Front" } },
+          { node_id: "node-sim", label: "Burner SIM +91-98721-XXXXX", type: "phone", kingpin_score: 0.81, tier: "HIGH", level: "HIGH", centrality: { betweenness: 0.71, pagerank: 0.79, degree: 0.82, connections_count: 47 }, metadata: { alias: "SIM-Viper01", role: "Encrypted Comms" } },
+          { node_id: "node-safehouse", label: "Safehouse Sector-4 Flat 9C", type: "safehouse", kingpin_score: 0.64, tier: "MED", level: "MED", centrality: { betweenness: 0.58, pagerank: 0.62, degree: 0.66, connections_count: 12 }, metadata: { alias: "Cache-Beta", role: "Cache Facility" } },
+          { node_id: "node-hawala", label: "Hawala Node TR-994", type: "tx", kingpin_score: 0.59, tier: "MED", level: "MED", centrality: { betweenness: 0.52, pagerank: 0.61, degree: 0.55, connections_count: 18 }, metadata: { alias: "Fin-Channel-99", role: "Offshore Wire" } }
+        ],
+        predicted_links: [
+          { id: "pred-link-1", source: "node-razor", target: "node-liaison", source_label: "Person_004 (Malhotra)", target_label: "Person_011 (Liaison)", confidence: 0.894, confidence_ratio: 0.894, adamic_adar: 3.42, jaccard: 0.72, common_neighbors: ["Phone_082", "Safehouse Sector-4", "Hawala TR-994"], reason: "3 shared clandestine nodes with zero direct telco calls indicates active operational evasion." },
+          { id: "pred-link-2", source: "node-apex", target: "node-panasian", source_label: "Apex Logistics LLC", target_label: "Pan-Asian Shell", confidence: 0.781, confidence_ratio: 0.781, adamic_adar: 2.15, jaccard: 0.78, common_neighbors: ["Hawala TR-994"], reason: "Shared registered corporate agent address and cross-collateralized SWIFT clearing slips." }
+        ]
+      };
+    }
+
+    function triggerRecompute() {
+      if (!currentNetworkData) {
+        loadAndAnalyzeNetwork();
+        return;
+      }
+      renderAllViews();
+    }
+    function triggerAnalyze() { triggerRecompute(); }
+
+    // --- RENDER MASTER DISPATCHER ---
+    function renderAllViews() {
+      if (!analysisResult) return;
+
+      // Filter nodes by chronological date & type
+      const visibleNodes = currentNetworkData.nodes.filter(node => {
+        const dateMatch = node.date <= activeTemporalDate;
+        const typeMatch = activeNodeTypeFilter === 'all' || node.type === activeNodeTypeFilter;
+        return dateMatch && typeMatch;
+      });
+
+      const filteredPredictedLinks = (analysisResult.predicted_links || []).filter(l => l.confidence >= activeConfidenceThreshold);
+
+      document.getElementById('badge-node-count').innerText = `${visibleNodes.length} Visible Nodes`;
+      document.getElementById('badge-kingpin-count').innerText = `${analysisResult.kingpin_rankings.length} Ranked`;
+      document.getElementById('badge-links-count').innerText = `${filteredPredictedLinks.length} Inferred`;
+      document.getElementById('pred-badge-count-canvas').innerText = filteredPredictedLinks.length;
+      document.getElementById('count-all').innerText = visibleNodes.length;
+
+      // Update milestone highlights
+      for (let i = 0; i <= 7; i++) {
+        const el = document.getElementById(`milestone-step-${i}`);
+        if (el) {
+          if (i <= currentTimelineIndex) {
+            el.className = "timeline-milestone p-1.5 rounded-lg bg-slate-800 text-white border border-slate-800 cursor-pointer shadow-2xs text-center transition-all";
+            const sub = el.querySelector('div:last-child');
+            if (sub) sub.className = "text-[9px] text-slate-300 truncate";
+          } else {
+            el.className = "timeline-milestone p-1.5 rounded-lg bg-white text-slate-700 border border-slate-300 cursor-pointer hover:border-slate-500 shadow-2xs text-center transition-all opacity-60";
+            const sub = el.querySelector('div:last-child');
+            if (sub) sub.className = "text-[9px] text-slate-500 truncate";
+          }
+        }
+      }
+
+      // 1. Render Graph Canvas
+      renderSvgGraph(visibleNodes, filteredPredictedLinks);
+
+      // 2. Render Node Inspector
+      renderNodeInspector(selectedNodeId);
+
+      // 3. Render Kingpin Centralization Tab
+      renderKingpinTab();
+
+      // 4. Render Suspected Hidden Links Tab
+      renderPredictedLinksTab(filteredPredictedLinks);
+    }
+
+    // --- 1. SVG GRAPH VISUALIZER (UNCLUTTERED & DRAGGABLE) ---
+    function renderSvgGraph(visibleNodes, predictedLinks) {
+      const edgesLayer = document.getElementById('edges-layer');
+      const predictedEdgesLayer = document.getElementById('predicted-edges-layer');
+      const nodesLayer = document.getElementById('nodes-layer');
+
+      edgesLayer.innerHTML = '';
+      predictedEdgesLayer.innerHTML = '';
+      nodesLayer.innerHTML = '';
+
+      const visibleNodeIds = new Set(visibleNodes.map(n => n.id));
+
+      // 1. Real Edges
+      currentNetworkData.edges.forEach(edge => {
+        if (!visibleNodeIds.has(edge.source) || !visibleNodeIds.has(edge.target)) return;
+        if (edge.date > activeTemporalDate) return;
+
+        const posA = nodePositions[edge.source] || { x: 500, y: 300 };
+        const posB = nodePositions[edge.target] || { x: 500, y: 300 };
+
+        const isCritical = edge.source === 'node-razor' || edge.target === 'node-razor';
+        const strokeColor = isCritical ? '#dc2626' : '#64748b';
+        const marker = isCritical ? 'url(#arrow-crimson)' : 'url(#arrow-slate)';
+
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', posA.x);
+        line.setAttribute('y1', posA.y);
+        line.setAttribute('x2', posB.x);
+        line.setAttribute('y2', posB.y);
+        line.setAttribute('stroke', strokeColor);
+        line.setAttribute('stroke-width', isCritical ? '2.2' : '1.6');
+        line.setAttribute('marker-end', marker);
+        edgesLayer.appendChild(line);
+
+        // Edge label pill with background
+        const midX = (posA.x + posB.x) / 2;
+        const midY = (posA.y + posB.y) / 2;
+        
+        const gLabel = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        gLabel.setAttribute('transform', `translate(${midX}, ${midY})`);
+
+        const textLen = edge.relationship_type.length;
+        const pillWidth = Math.max(74, textLen * 6.5 + 14);
+
+        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('x', -pillWidth / 2);
+        rect.setAttribute('y', -8);
+        rect.setAttribute('width', pillWidth);
+        rect.setAttribute('height', 16);
+        rect.setAttribute('rx', 4);
+        rect.setAttribute('fill', isCritical ? '#fef2f2' : '#ffffff');
+        rect.setAttribute('stroke', isCritical ? '#fecaca' : '#cbd5e1');
+        rect.setAttribute('stroke-width', '1');
+
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', 0);
+        text.setAttribute('y', 3.5);
+        text.setAttribute('fill', isCritical ? '#991b1b' : '#334155');
+        text.setAttribute('font-size', '8.5');
+        text.setAttribute('font-family', 'JetBrains Mono, monospace');
+        text.setAttribute('font-weight', '600');
+        text.setAttribute('text-anchor', 'middle');
+        text.textContent = edge.relationship_type;
+
+        gLabel.appendChild(rect);
+        gLabel.appendChild(text);
+        edgesLayer.appendChild(gLabel);
+      });
+
+      // 2. Predicted Inferred Edges (Arced cleanly around nodes)
+      predictedLinks.forEach(link => {
+        if (!visibleNodeIds.has(link.source) || !visibleNodeIds.has(link.target)) return;
+
+        const posA = nodePositions[link.source] || { x: 500, y: 300 };
+        const posB = nodePositions[link.target] || { x: 500, y: 300 };
+        const isHighlighted = focusedLinkId === link.id || focusedLinkId === `${link.source}-${link.target}`;
+
+        // Arc away cleanly based on direction
+        const midX = (posA.x + posB.x) / 2;
+        const midY = (posA.y + posB.y) / 2;
+        const offsetArc = (link.source === 'node-razor') ? 60 : -50;
+        const cx = midX;
+        const cy = midY + offsetArc;
+
+        const curve = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        curve.setAttribute('d', `M ${posA.x} ${posA.y} Q ${cx} ${cy} ${posB.x} ${posB.y}`);
+        curve.setAttribute('fill', 'none');
+        curve.setAttribute('stroke', isHighlighted ? '#ec4899' : '#64748b');
+        curve.setAttribute('stroke-width', isHighlighted ? '3.5' : '1.8');
+        curve.setAttribute('stroke-dasharray', '5,4');
+        curve.setAttribute('marker-end', isHighlighted ? 'url(#arrow-highlighted)' : 'url(#arrow-predicted)');
+        if (isHighlighted) curve.classList.add('highlighted-edge');
+        predictedEdgesLayer.appendChild(curve);
+
+        // Label pill on curve apex
+        const gPill = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        const pillY = (midY + cy) / 2;
+        gPill.setAttribute('transform', `translate(${cx}, ${pillY})`);
+        
+        const r = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        r.setAttribute('x', -58);
+        r.setAttribute('y', -9);
+        r.setAttribute('width', 116);
+        r.setAttribute('height', 18);
+        r.setAttribute('rx', 4);
+        r.setAttribute('fill', isHighlighted ? '#fdf2f8' : '#ffffff');
+        r.setAttribute('stroke', isHighlighted ? '#ec4899' : '#94a3b8');
+        r.setAttribute('stroke-width', isHighlighted ? '1.5' : '1');
+
+        const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        t.setAttribute('x', 0);
+        t.setAttribute('y', 3.5);
+        t.setAttribute('fill', isHighlighted ? '#be185d' : '#1e293b');
+        t.setAttribute('font-size', '8.5');
+        t.setAttribute('font-family', 'JetBrains Mono, monospace');
+        t.setAttribute('font-weight', '700');
+        t.setAttribute('text-anchor', 'middle');
+        t.textContent = `INFERRED: ${(link.confidence * 100).toFixed(1)}%`;
+
+        gPill.appendChild(r);
+        gPill.appendChild(t);
+        predictedEdgesLayer.appendChild(gPill);
+      });
+
+      // 3. Nodes with Self-Contained Crisp Labels and Native Drag
+      visibleNodes.forEach(node => {
+        const pos = nodePositions[node.id] || { x: 500, y: 300 };
+        const gNode = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        gNode.setAttribute('transform', `translate(${pos.x}, ${pos.y})`);
+        gNode.setAttribute('data-id', node.id);
+        gNode.setAttribute('filter', 'url(#node-shadow)');
+        gNode.classList.add('cursor-grab', 'group');
+
+        let fillColor = '#ffffff';
+        let strokeColor = '#64748b';
+        let iconColor = '#475569';
+        let iconName = 'person';
+        let radius = 24;
+
+        if (node.type === 'person') {
+          if (node.id === 'node-razor') {
+            fillColor = '#fef2f2';
+            strokeColor = '#dc2626';
+            iconColor = '#dc2626';
+            radius = 30;
+            iconName = 'person';
+          } else {
+            fillColor = '#fffbeb';
+            strokeColor = '#d97706';
+            iconColor = '#b45309';
+            radius = 22;
+            iconName = 'person';
+          }
+        } else if (node.type === 'phone') {
+          fillColor = '#fffbeb';
+          strokeColor = '#d97706';
+          iconColor = '#b45309';
+          iconName = 'smartphone';
+          radius = 24;
+        } else if (node.type === 'org') {
+          if (node.id === 'node-apex') {
+            fillColor = '#fffbeb';
+            strokeColor = '#d97706';
+            iconColor = '#b45309';
+            radius = 26;
+            iconName = 'corporate_fare';
+          } else {
+            fillColor = '#ffffff';
+            strokeColor = '#64748b';
+            iconColor = '#475569';
+            radius = 20;
+            iconName = 'account_balance';
+          }
+        } else if (node.type === 'safehouse') {
+          fillColor = '#ffffff';
+          strokeColor = '#0284c7';
+          iconColor = '#0284c7';
+          iconName = 'home_work';
+          radius = 24;
+        } else if (node.type === 'tx') {
+          fillColor = '#ffffff';
+          strokeColor = '#475569';
+          iconColor = '#475569';
+          iconName = 'paid';
+          radius = 24;
+        } else if (node.type === 'vehicle') {
+          fillColor = '#ffffff';
+          strokeColor = '#64748b';
+          iconColor = '#475569';
+          iconName = 'directions_car';
+          radius = 20;
+        }
+
+        // Concentric ring for Kingpin
+        if (node.id === 'node-razor') {
+          const outerRing = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          outerRing.setAttribute('r', '42');
+          outerRing.setAttribute('fill', 'none');
+          outerRing.setAttribute('stroke', '#dc2626');
+          outerRing.setAttribute('stroke-dasharray', '4,4');
+          outerRing.setAttribute('stroke-width', '1.5');
+          outerRing.setAttribute('opacity', '0.5');
+          gNode.appendChild(outerRing);
+        }
+
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('r', radius);
+        circle.setAttribute('fill', fillColor);
+        circle.setAttribute('stroke', strokeColor);
+        circle.setAttribute('stroke-width', node.id === 'node-razor' ? '2.5' : '2');
+        gNode.appendChild(circle);
+
+        const icon = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        icon.setAttribute('x', 0);
+        icon.setAttribute('y', radius > 24 ? 7 : 6);
+        icon.setAttribute('fill', iconColor);
+        icon.setAttribute('font-family', 'Material Symbols Outlined');
+        icon.setAttribute('font-size', radius > 24 ? '22' : '18');
+        icon.setAttribute('text-anchor', 'middle');
+        icon.textContent = iconName;
+        gNode.appendChild(icon);
+
+        // Self-Contained Crisp Label Pill Below Node
+        const displayText = labelModeAlias ? (node.metadata?.alias || node.label) : (node.name || node.label);
+        const shortDisplay = displayText.length > 22 ? displayText.substring(0, 20) + '..' : displayText;
+        const pillW = Math.max(100, shortDisplay.length * 6.5 + 16);
+        const pillH = 28;
+        const pillY = radius + 6;
+
+        const gLabelBox = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        gLabelBox.setAttribute('transform', `translate(0, ${pillY})`);
+
+        const bgRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        bgRect.setAttribute('x', -pillW / 2);
+        bgRect.setAttribute('y', 0);
+        bgRect.setAttribute('width', pillW);
+        bgRect.setAttribute('height', pillH);
+        bgRect.setAttribute('rx', 5);
+        bgRect.setAttribute('fill', '#ffffff');
+        bgRect.setAttribute('stroke', node.id === selectedNodeId ? '#0f172a' : '#cbd5e1');
+        bgRect.setAttribute('stroke-width', node.id === selectedNodeId ? '1.5' : '1');
+        bgRect.setAttribute('filter', 'drop-shadow(0 1px 2px rgba(15,23,42,0.06))');
+
+        const nameText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        nameText.setAttribute('x', 0);
+        nameText.setAttribute('y', 12);
+        nameText.setAttribute('fill', '#0f172a');
+        nameText.setAttribute('font-size', '9.5');
+        nameText.setAttribute('font-weight', '700');
+        nameText.setAttribute('font-family', 'IBM Plex Sans, sans-serif');
+        nameText.setAttribute('text-anchor', 'middle');
+        nameText.textContent = shortDisplay;
+
+        const dateTag = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        dateTag.setAttribute('x', 0);
+        dateTag.setAttribute('y', 23);
+        dateTag.setAttribute('fill', '#64748b');
+        dateTag.setAttribute('font-size', '8');
+        dateTag.setAttribute('font-weight', '600');
+        dateTag.setAttribute('font-family', 'JetBrains Mono, monospace');
+        dateTag.setAttribute('text-anchor', 'middle');
+        dateTag.textContent = node.date;
+
+        gLabelBox.appendChild(bgRect);
+        gLabelBox.appendChild(nameText);
+        gLabelBox.appendChild(dateTag);
+        gNode.appendChild(gLabelBox);
+
+        // Node Drag Start Listener
+        gNode.addEventListener('mousedown', (e) => {
+          e.stopPropagation();
+          draggingNodeId = node.id;
+          nodeDragMoved = false;
+          dragStartMousePos = { x: e.clientX, y: e.clientY };
+          dragNodeStartPos = { ...nodePositions[node.id] };
+        });
+
+        nodesLayer.appendChild(gNode);
+      });
+    }
+
+    // Window Listeners for Smooth Node Dragging and Canvas Panning
+    window.addEventListener('mousemove', (e) => {
+      if (draggingNodeId) {
+        const dx = (e.clientX - dragStartMousePos.x) / viewZoom;
+        const dy = (e.clientY - dragStartMousePos.y) / viewZoom;
+        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+          nodeDragMoved = true;
+          nodePositions[draggingNodeId] = {
+            x: Math.max(40, Math.min(960, dragNodeStartPos.x + dx)),
+            y: Math.max(40, Math.min(580, dragNodeStartPos.y + dy))
+          };
+          renderAllViews();
+        }
+      } else if (isPanning) {
+        viewPanX = e.clientX - panStartX;
+        viewPanY = e.clientY - panStartY;
+        applyViewportTransform();
+      }
+    });
+
+    window.addEventListener('mouseup', (e) => {
+      if (draggingNodeId) {
+        const clickedNodeId = draggingNodeId;
+        draggingNodeId = null;
+        if (!nodeDragMoved) {
+          focusedLinkId = null;
+          selectedNodeId = clickedNodeId;
+          renderNodeInspector(clickedNodeId);
+          renderAllViews();
+        }
+      }
+      isPanning = false;
+    });
+
+    // --- 2. FORENSIC NODE INSPECTOR ---
+    function renderNodeInspector(nodeId) {
+      if (!currentNetworkData || !analysisResult) return;
+      const node = currentNetworkData.nodes.find(n => n.id === nodeId);
+      if (!node) return;
+
+      selectedNodeId = nodeId;
+      const kingpinRecord = analysisResult.kingpin_rankings.find(k => k.node_id === nodeId);
+
+      document.getElementById('inspector-endpoint').innerHTML = `<span class="material-symbols-outlined text-[15px] text-slate-600">verified_user</span> GET /entity/${node.id}`;
+      document.getElementById('inspector-name').innerText = node.name || node.label;
+      document.getElementById('inspector-alias').innerText = `Alias: ${node.metadata?.alias || "N/A"}`;
+      document.getElementById('inspector-node-id').innerText = `neo4j://node/${node.id}`;
+      document.getElementById('inspector-date').innerText = `${node.date} (Detected)`;
+      document.getElementById('inspector-topology').innerText = node.id === 'node-razor' ? '24 In // 14 Out' : '8 In // 6 Out';
+
+      const threatVal = kingpinRecord ? kingpinRecord.kingpin_score : (node.metadata?.threat || 0.5);
+      document.getElementById('inspector-score-text').innerText = `${threatVal.toFixed(2)} / 1.0`;
+
+      const banner = document.getElementById('inspector-threat-banner');
+      const priorityTag = document.getElementById('inspector-priority-tag');
+      const tierText = document.getElementById('inspector-tier-text');
+      const iconBox = document.getElementById('inspector-icon-box');
+
+      if (threatVal >= 0.85) {
+        banner.className = "bg-rose-50/70 border border-rose-200 p-3 rounded-lg flex items-center justify-between text-xs font-mono";
+        priorityTag.className = "px-2 py-0.5 rounded bg-rose-50 border border-rose-200 font-mono text-[10px] font-bold text-rose-800";
+        priorityTag.innerText = "PRIORITY 1 TARGET";
+        tierText.innerText = "CRITICAL KINGPIN";
+        iconBox.className = "w-12 h-12 rounded-xl bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-700 shrink-0";
+      } else if (threatVal >= 0.65) {
+        banner.className = "bg-amber-50/70 border border-amber-200 p-3 rounded-lg flex items-center justify-between text-xs font-mono";
+        priorityTag.className = "px-2 py-0.5 rounded bg-amber-50 border border-amber-200 font-mono text-[10px] font-bold text-amber-800";
+        priorityTag.innerText = "SURVEILLANCE SUBJECT";
+        tierText.innerText = "HIGH-PRIORITY BROKER";
+        iconBox.className = "w-12 h-12 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700 shrink-0";
+      } else {
+        banner.className = "bg-slate-100 border border-slate-300 p-3 rounded-lg flex items-center justify-between text-xs font-mono";
+        priorityTag.className = "px-2 py-0.5 rounded bg-slate-200 border border-slate-300 font-mono text-[10px] font-bold text-slate-700";
+        priorityTag.innerText = "PERIPHERAL NODE";
+        tierText.innerText = "STANDARD SUSPECT";
+        iconBox.className = "w-12 h-12 rounded-xl bg-slate-100 border border-slate-300 flex items-center justify-center text-slate-600 shrink-0";
+      }
+
+      const bw = kingpinRecord ? kingpinRecord.centrality.betweenness : 0.45;
+      const pr = kingpinRecord ? kingpinRecord.centrality.pagerank : 0.50;
+      const deg = kingpinRecord ? kingpinRecord.centrality.degree : 0.40;
+      const conns = kingpinRecord ? kingpinRecord.centrality.connections_count : 14;
+
+      document.getElementById('inspector-bw').innerText = bw.toFixed(2);
+      document.getElementById('inspector-bw-bar').style.width = `${Math.min(100, bw * 100)}%`;
+
+      document.getElementById('inspector-pr').innerText = pr.toFixed(2);
+      document.getElementById('inspector-pr-bar').style.width = `${Math.min(100, pr * 100)}%`;
+
+      document.getElementById('inspector-deg').innerText = deg.toFixed(2);
+      document.getElementById('inspector-deg-bar').style.width = `${Math.min(100, deg * 100)}%`;
+      document.getElementById('inspector-deg-label').innerText = `Direct Connections (${conns} Conns)`;
+    }
+
+    // --- 3. KINGPIN CENTRALIZATION TAB ---
+    function renderKingpinTab() {
+      const container = document.getElementById('kingpin-cards-container');
+      container.innerHTML = '';
+      if (!analysisResult || !analysisResult.kingpin_rankings) return;
+
+      analysisResult.kingpin_rankings.forEach((k, idx) => {
+        const isKingpin = idx === 0;
+        const card = document.createElement('div');
+        card.className = `bg-white ${isKingpin ? 'border-2 border-rose-300 bg-rose-50/50' : 'border border-slate-300 hover:bg-slate-50'} p-4 rounded-xl flex flex-col gap-3.5 shadow-xs transition-all`;
+
+        card.innerHTML = `
+          <div class="flex items-start justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg ${isKingpin ? 'bg-rose-100 border border-rose-200 text-rose-700' : 'bg-slate-100 border border-slate-300 text-slate-700'} flex items-center justify-center font-mono font-bold text-xs">
+                #${idx + 1}
+              </div>
+              <div>
+                <div class="font-bold text-xs text-slate-900">${k.label}</div>
+                <div class="text-[11px] text-slate-500 font-mono">${k.metadata?.role || k.type}</div>
+              </div>
+            </div>
+            <span class="px-2 py-0.5 rounded ${isKingpin ? 'bg-rose-100 border border-rose-200 text-rose-800' : 'bg-slate-100 border border-slate-300 text-slate-800'} font-mono text-[10px] font-bold">
+              ${k.kingpin_score.toFixed(2)} ${k.tier}
+            </span>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 text-[10px] font-mono">
+            <div class="bg-white border border-slate-200 p-2 rounded flex flex-col gap-1 shadow-2xs">
+              <div class="flex justify-between text-slate-500 text-[10px]"><span>BETW</span><span class="text-slate-800 font-bold">${k.centrality.betweenness.toFixed(2)}</span></div>
+              <div class="w-full bg-slate-200 h-1.5 rounded overflow-hidden">
+                <div class="${isKingpin ? 'bg-rose-500' : 'bg-slate-600'} h-full rounded" style="width: ${k.centrality.betweenness * 100}%"></div>
+              </div>
+            </div>
+            <div class="bg-white border border-slate-200 p-2 rounded flex flex-col gap-1 shadow-2xs">
+              <div class="flex justify-between text-slate-500 text-[10px]"><span>PAGERK</span><span class="text-slate-800 font-bold">${k.centrality.pagerank.toFixed(2)}</span></div>
+              <div class="w-full bg-slate-200 h-1.5 rounded overflow-hidden">
+                <div class="${isKingpin ? 'bg-rose-500' : 'bg-slate-600'} h-full rounded" style="width: ${k.centrality.pagerank * 100}%"></div>
+              </div>
+            </div>
+            <div class="bg-white border border-slate-200 p-2 rounded flex flex-col gap-1 shadow-2xs">
+              <div class="flex justify-between text-slate-500 text-[10px]"><span>CONNS</span><span class="text-slate-800 font-bold">${k.centrality.connections_count}</span></div>
+              <div class="w-full bg-slate-200 h-1.5 rounded overflow-hidden">
+                <div class="${isKingpin ? 'bg-rose-500' : 'bg-slate-600'} h-full rounded" style="width: ${Math.min(100, k.centrality.connections_count * 2)}%"></div>
+              </div>
+            </div>
+          </div>
+
+          <button onclick="focusNodeInCanvas('${k.node_id}')" class="flex items-center justify-center gap-1.5 w-full bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 font-mono text-xs py-1.5 rounded-lg transition-colors cursor-pointer">
+            <span class="material-symbols-outlined text-[15px] text-slate-600">visibility</span>
+            <span>Focus in Network Canvas</span>
+          </button>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // --- 4. SUSPECTED HIDDEN LINKS TAB ---
+    function renderPredictedLinksTab(predictedLinks) {
+      const container = document.getElementById('predicted-links-container');
+      const summaryText = document.getElementById('predicted-count-summary');
+      container.innerHTML = '';
+
+      summaryText.innerText = `${predictedLinks.length} Inferred Associations Meeting Threshold (≥ ${activeConfidenceThreshold.toFixed(2)})`;
+
+      if (predictedLinks.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-2 bg-white border border-slate-300 rounded-xl p-8 text-center text-slate-500 font-mono text-xs">
+            No inferred associations found above threshold ${activeConfidenceThreshold.toFixed(2)}. Adjust the slider to broaden sensitivity.
+          </div>
+        `;
+        return;
+      }
+
+      predictedLinks.forEach(link => {
+        const card = document.createElement('div');
+        card.className = "bg-white border border-slate-300 hover:border-slate-400 p-4 rounded-xl flex flex-col justify-between gap-3 transition-colors shadow-2xs";
+
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-2">
+            <div class="flex items-center gap-2 text-xs font-mono">
+              <span class="text-slate-900 font-bold">${link.source_label}</span>
+              <span class="text-slate-400 material-symbols-outlined text-[15px]">swap_horiz</span>
+              <span class="text-slate-900 font-bold">${link.target_label}</span>
+            </div>
+            <span class="px-2 py-0.5 rounded bg-slate-200 border border-slate-300 text-slate-800 font-mono text-[10px] font-bold">
+              ${(link.confidence * 100).toFixed(1)}% CONF
+            </span>
+          </div>
+          <p class="text-slate-600 text-xs leading-relaxed">
+            ${link.reason}
+          </p>
+          <div class="flex items-center justify-between pt-2 border-t border-slate-200 font-mono text-[11px]">
+            <span class="text-slate-500">Adamic-Adar (${link.adamic_adar || '3.42'})</span>
+            <button onclick="focusPredictedLink('${link.source}', '${link.target}', '${(link.confidence * 100).toFixed(1)}%', '${link.reason.replace(/'/g, "\\'")}')" class="px-3.5 py-1.5 rounded-lg bg-pink-50 hover:bg-pink-100 border border-pink-300 text-pink-900 text-xs font-bold transition-colors flex items-center gap-1.5 shadow-2xs cursor-pointer">
+              <span class="material-symbols-outlined text-[16px] text-pink-700">center_focus_strong</span>
+              <span>Focus Covert Link</span>
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // --- 5. EVIDENCE & FORENSIC REGISTRY (TAB 4) ---
+    function renderEvidenceCards() {
+      const container = document.getElementById('evidence-cards-grid');
+      container.innerHTML = '';
+
+      evidenceExhibits.forEach(ex => {
+        const card = document.createElement('div');
+        card.className = "bg-white border border-slate-300 p-4 rounded-xl flex flex-col justify-between gap-3 shadow-xs hover:border-slate-400 transition-all";
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-2 border-b border-slate-200 pb-2.5">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-lg bg-slate-100 border border-slate-300 flex items-center justify-center text-slate-700">
+                <span class="material-symbols-outlined text-[18px]">${ex.icon}</span>
+              </div>
+              <div>
+                <span class="text-[10px] font-mono text-slate-500 font-semibold">${ex.id} · ${ex.date}</span>
+                <h4 class="font-bold text-xs text-slate-900">${ex.tag}</h4>
+              </div>
+            </div>
+            <span class="px-2 py-0.5 rounded bg-emerald-50 border border-emerald-200 text-emerald-800 text-[10px] font-mono font-bold">
+              SEC. 65B
+            </span>
+          </div>
+          <div class="flex flex-col gap-1.5 text-xs">
+            <span class="text-slate-500 font-mono text-[11px]"><strong>Target Entity:</strong> ${ex.target}</span>
+            <p class="text-slate-700 leading-relaxed text-xs">${ex.desc}</p>
+          </div>
+          <div class="pt-2 border-t border-slate-200 flex items-center justify-between text-[10px] font-mono text-slate-500">
+            <span>SHA-256 AUDIT LOCKED</span>
+            <span class="text-slate-800 font-semibold">LE-CERTIFIED</span>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // --- TIMELINE EVOLUTION SLIDER & PLAYBACK ---
+    function onTemporalSliderChange(idx) {
+      currentTimelineIndex = parseInt(idx);
+      const stepData = chronologicalDates[currentTimelineIndex] || chronologicalDates[7];
+      activeTemporalDate = stepData.date;
+      document.getElementById('time-cutoff-badge').innerText = `Cutoff: ${stepData.date} (${currentTimelineIndex + 1} of 8 Entities)`;
+      renderAllViews();
+    }
+
+    function setTimelineStep(idx) {
+      const slider = document.getElementById('temporal-slider');
+      if (slider) slider.value = idx;
+      onTemporalSliderChange(idx);
+    }
+
+    function stepTimeline(dir) {
+      let nextIdx = currentTimelineIndex + dir;
+      if (nextIdx < 0) nextIdx = 0;
+      if (nextIdx > 7) nextIdx = 7;
+      setTimelineStep(nextIdx);
+    }
+
+    function toggleTimelinePlay() {
+      const playIcon = document.getElementById('play-icon');
+      const playText = document.getElementById('play-text');
+      if (timelinePlayInterval) {
+        clearInterval(timelinePlayInterval);
+        timelinePlayInterval = null;
+        playIcon.innerText = "play_arrow";
+        playText.innerText = "Play Time-Lapse";
+      } else {
+        playIcon.innerText = "pause";
+        playText.innerText = "Pause";
+        if (currentTimelineIndex >= 7) setTimelineStep(0);
+
+        timelinePlayInterval = setInterval(() => {
+          if (currentTimelineIndex < 7) {
+            stepTimeline(1);
+          } else {
+            clearInterval(timelinePlayInterval);
+            timelinePlayInterval = null;
+            playIcon.innerText = "play_arrow";
+            playText.innerText = "Play Time-Lapse";
+          }
+        }, 1300);
+      }
+    }
+
+    // --- NODE FILTER LOGIC ---
+    function applyNodeTypeFilter(type) {
+      activeNodeTypeFilter = type;
+      document.querySelectorAll('.filter-chip').forEach(btn => {
+        if (btn.getAttribute('data-type') === type) {
+          btn.className = "filter-chip px-3 py-1.5 rounded-full bg-slate-700 text-white font-medium flex items-center gap-1.5 transition-all text-xs shadow-xs";
+        } else {
+          btn.className = "filter-chip px-3 py-1.5 rounded-full bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 flex items-center gap-1.5 transition-all text-xs";
+        }
+      });
+      renderAllViews();
+    }
+
+    // --- CONFIDENCE SLIDER ---
+    function onConfidenceSliderChange(val) {
+      activeConfidenceThreshold = parseFloat(val);
+      document.getElementById('confidence-value-badge').innerText = `≥ ${activeConfidenceThreshold.toFixed(2)}`;
+      renderAllViews();
+    }
+
+    // --- FOCUS NODE & FOCUS COVERT LINK ---
+    function focusNodeInCanvas(nodeId) {
+      switchTab('canvas-tab');
+      focusedLinkId = null;
+      document.getElementById('inspector-focus-box').classList.add('hidden');
+      selectedNodeId = nodeId;
+      renderNodeInspector(nodeId);
+
+      const pos = nodePositions[nodeId];
+      if (pos) {
+        viewPanX = 500 - pos.x * viewZoom;
+        viewPanY = 310 - pos.y * viewZoom;
+        applyViewportTransform();
+      }
+    }
+
+    function focusPredictedLink(srcId, dstId, confText, reasonText) {
+      switchTab('canvas-tab');
+      focusedLinkId = `${srcId}-${dstId}`;
+
+      const focusBox = document.getElementById('inspector-focus-box');
+      focusBox.classList.remove('hidden');
+      document.getElementById('focus-conf-text').innerText = `${confText} CONF`;
+      document.getElementById('focus-desc-text').innerText = reasonText;
+
+      selectedNodeId = srcId;
+      renderNodeInspector(srcId);
+      renderAllViews();
+
+      const posA = nodePositions[srcId] || { x: 500, y: 300 };
+      const posB = nodePositions[dstId] || { x: 500, y: 300 };
+      const midX = (posA.x + posB.x) / 2;
+      const midY = (posA.y + posB.y) / 2;
+
+      viewPanX = 500 - midX * viewZoom;
+      viewPanY = 310 - midY * viewZoom;
+      applyViewportTransform();
+    }
+
+    // --- VIEWPORT PAN & ZOOM ---
+    function applyViewportTransform() {
+      const g = document.getElementById('viewport-group');
+      if (g) g.setAttribute('transform', `translate(${viewPanX}, ${viewPanY}) scale(${viewZoom})`);
+    }
+    function zoomCanvas(factor) {
+      viewZoom = Math.max(0.5, Math.min(2.5, viewZoom * factor));
+      applyViewportTransform();
+    }
+    function resetCanvasView() {
+      viewZoom = 1;
+      viewPanX = 0;
+      viewPanY = 0;
+      applyViewportTransform();
+    }
+    function toggleNodeLabelsDisplay() {
+      labelModeAlias = !labelModeAlias;
+      document.getElementById('label-mode-text').innerText = labelModeAlias ? "Real Names" : "Alias";
+      renderAllViews();
+    }
+
+    // SVG Drag-to-Pan on Background
+    const svgEl = document.getElementById('network-svg');
+    svgEl.addEventListener('mousedown', (e) => {
+      if (e.target.tagName === 'svg' || e.target.tagName === 'rect' && e.target.getAttribute('fill')?.includes('grid-dots')) {
+        isPanning = true;
+        panStartX = e.clientX - viewPanX;
+        panStartY = e.clientY - viewPanY;
+      }
+    });
+
+    // --- DIRECT CLIENT-SIDE PDF FILE DOWNLOAD ---
+    async function downloadPdfDossier() {
+      if (!analysisResult) {
+        alert("Please click 'Generate / Ingest Network' first.");
+        return;
+      }
+
+      const btn = document.getElementById('btn-export-pdf');
+      const origText = document.getElementById('pdf-btn-text').innerText;
+      document.getElementById('pdf-btn-text').innerText = "Generating PDF...";
+      if (btn) btn.disabled = true;
+
+      document.getElementById('pdf-gen-date').innerText = new Date().toLocaleString();
+
+      const kingpinTbody = document.getElementById('pdf-kingpin-tbody');
+      kingpinTbody.innerHTML = '';
+      analysisResult.kingpin_rankings.forEach((k, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>#${idx + 1}</td>
+          <td><strong>${k.label}</strong></td>
+          <td>${k.metadata?.role || k.type}</td>
+          <td><strong>${k.kingpin_score.toFixed(2)} (${k.tier})</strong></td>
+          <td>${k.centrality.betweenness.toFixed(2)}</td>
+          <td>${k.centrality.pagerank.toFixed(2)}</td>
+          <td>${k.centrality.connections_count} conns</td>
+        `;
+        kingpinTbody.appendChild(tr);
+      });
+
+      const linksTbody = document.getElementById('pdf-links-tbody');
+      linksTbody.innerHTML = '';
+      (analysisResult.predicted_links || []).forEach(l => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${l.source_label}</strong></td>
+          <td><strong>${l.target_label}</strong></td>
+          <td><strong>${(l.confidence * 100).toFixed(1)}%</strong></td>
+          <td>${l.adamic_adar || '3.42'}</td>
+          <td>${l.reason}</td>
+        `;
+        linksTbody.appendChild(tr);
+      });
+
+      const evSummary = document.getElementById('pdf-evidence-summary');
+      evSummary.innerHTML = evidenceExhibits.map(ex => `
+        <div style="margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px dashed #cbd5e1;">
+          <strong>[${ex.id}] ${ex.tag} (${ex.date})</strong> - ${ex.target}: ${ex.desc}
+        </div>
+      `).join('');
+
+      const element = document.getElementById('pdf-report-content');
+      element.classList.remove('hidden');
+
+      const opt = {
+        margin:       10,
+        filename:     'AIGIS_Criminal_Intelligence_Dossier_Case_902.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      try {
+        await html2pdf().set(opt).from(element).save();
+      } catch (err) {
+        console.error("PDF generation error:", err);
+      } finally {
+        element.classList.add('hidden');
+        document.getElementById('pdf-btn-text').innerText = origText;
+        if (btn) btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>
