@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    @layer base {
+      html, body { margin: 0; padding: 0; font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif; }
+      body { background-color: #7d8ea3; color: #0f172a; }
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #94a3b8; }
+    ::-webkit-scrollbar-thumb { background: #64748b; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['IBM Plex Sans', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          },
+          colors: {
+            slatecanvas: {
+              DEFAULT: '#8292a5',
+              dark: '#6f8095',
+              deep: '#5a6b80'
+            },
+            platinum: {
+              50: '#f8fafc',
+              100: '#f1f5f9',
+              200: '#e2e8f0',
+              300: '#cbd5e1',
+              400: '#94a3b8',
+              500: '#64748b',
+              600: '#475569'
+            },
+            warm: {
+              50: '#f8fafc',
+              100: '#f1f5f9',
+              200: '#e2e8f0',
+              300: '#cbd5e1',
+              400: '#94a3b8',
+              500: '#64748b',
+              600: '#475569'
+            },
+            uv: {
+              50: '#f0f4f8',
+              100: '#e2e8f0',
+              200: '#cbd5e1',
+              300: '#94a3b8',
+              400: '#64748b',
+              500: '#475569',
+              600: '#334155',
+              700: '#2c3e50',
+              800: '#1e293b',
+              900: '#0f172a',
+              950: '#020617'
+            }
+          },
+          boxShadow: {
+            subtle: '0 1px 3px 0 rgb(15 23 42 / 0.08), 0 1px 2px -1px rgb(15 23 42 / 0.08)',
+            card: '0 4px 14px -2px rgb(15 23 42 / 0.12), 0 2px 5px -2px rgb(15 23 42 / 0.08)'
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-[#8292a5] text-slate-800 antialiased min-h-screen text-[13px] flex flex-col font-sans selection:bg-slate-300 selection:text-slate-900">
+<!-- Left Collapsible Clean Sidebar Navigation -->
+<aside class="fixed left-0 top-0 h-full w-64 bg-[#f8fafc]/95 border-r border-slate-300 z-50 flex flex-col justify-between shadow-subtle backdrop-blur-sm">
+<div class="flex flex-col">
+<!-- Brand Header -->
+<div class="px-5 py-4 flex items-center justify-between border-b border-slate-200">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-slate-800 flex items-center justify-center text-white shadow-sm ring-1 ring-slate-600/50">
+<span class="material-symbols-outlined text-[20px]">hub</span>
+</div>
+<div class="flex flex-col">
+<span class="font-bold text-sm tracking-tight text-slate-900 leading-tight">AIGIS-GRAPH</span>
+<span class="text-[11px] text-slate-500 font-mono">Forensic Intel v3.4</span>
+</div>
+</div>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-slate-200 text-slate-700 border border-slate-300">PROD</span>
+</div>
+<!-- Nav Section 1 -->
+<div class="px-4 pt-5 pb-3">
+<div class="text-[11px] font-mono font-semibold uppercase tracking-wider text-slate-500 px-3 mb-2">Intelligence Workspace</div>
+<nav class="flex flex-col gap-1">
+<a aria-current="page" class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold bg-slate-200/80 text-slate-800 border border-slate-300 shadow-xs" data-path="graph-investigation-canvas" href="#">
+<span class="material-symbols-outlined text-[18px] text-slate-700">bubble_chart</span>
+<span>Graph Canvas</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors" data-path="cdr-timeline-correlation" href="#">
+<span class="material-symbols-outlined text-[18px] text-slate-500">query_stats</span>
+<span>CDR &amp; Timeline</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors" data-path="financial-trail-matrix" href="#">
+<span class="material-symbols-outlined text-[18px] text-slate-500">currency_exchange</span>
+<span>Financial Matrix</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors" data-path="entity-dossier-registry" href="#">
+<span class="material-symbols-outlined text-[18px] text-slate-500">badge</span>
+<span>Entity Registry</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors" data-path="kingpin-centrality-radar" href="#">
+<span class="material-symbols-outlined text-[18px] text-slate-500">radar</span>
+<span>Kingpin Centrality</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors" data-path="link-prediction-engine" href="#">
+<span class="material-symbols-outlined text-[18px] text-slate-500">alt_route</span>
+<span>Link Predictions</span>
+</a>
+</nav>
+</div>
+<!-- Nav Section 2 -->
+<div class="px-4 pt-3 pb-2 border-t border-slate-200">
+<div class="text-[11px] font-mono font-semibold uppercase tracking-wider text-slate-500 px-3 mb-2">Legal &amp; Evidence</div>
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors" data-path="court-evidence-dossier" href="#">
+<span class="material-symbols-outlined text-[18px] text-slate-500">gavel</span>
+<span>Court Exhibits</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors" data-path="audit-chain-of-custody" href="#">
+<span class="material-symbols-outlined text-[18px] text-slate-500">verified</span>
+<span>Chain of Custody</span>
+</a>
+</nav>
+</div>
+</div>
+<!-- Sidebar Footer Status -->
+<div class="p-4 border-t border-slate-200 bg-slate-100/90 flex flex-col gap-3">
+<div class="bg-white border border-slate-300 p-3 rounded-lg flex flex-col gap-2 font-mono text-[11px] shadow-sm">
+<div class="flex items-center justify-between text-slate-500">
+<span>CLUSTER NODES</span>
+<span class="text-slate-900 font-semibold">1,482</span>
+</div>
+<div class="flex items-center justify-between text-slate-500">
+<span>CDR EDGES</span>
+<span class="text-slate-900 font-semibold">28,940</span>
+</div>
+<div class="flex items-center justify-between text-slate-500 pt-1 border-t border-slate-200">
+<span>EVIDENCE MATCH</span>
+<span class="text-emerald-700 font-bold">98.4%</span>
+</div>
+</div>
+<div class="flex items-center justify-between px-1 text-slate-500">
+<span class="flex items-center gap-1.5 font-mono text-[11px] text-slate-700 font-medium">
+<span class="material-symbols-outlined text-[15px] text-slate-600">lock</span> RESTRICTED TIER 1
+      </span>
+<span class="text-[10px] text-slate-500 font-mono">LE-AUTH</span>
+</div>
+</div>
+</aside>
+<!-- Main App Wrapper -->
+<div class="pl-64 flex flex-col min-h-screen bg-[#8292a5]">
+<!-- Top App Navigation Bar -->
+<header class="fixed top-0 left-64 right-0 z-40 bg-[#f8fafc]/95 backdrop-blur-md border-b border-slate-300 shadow-subtle">
+<!-- Top Primary Info Row -->
+<div class="h-14 px-7 flex items-center justify-between border-b border-slate-200 bg-[#f8fafc]">
+<div class="flex items-center gap-4 min-w-0">
+<div class="flex items-center gap-2 bg-slate-200/70 border border-slate-300 px-3 py-1.5 rounded-md text-xs font-mono">
+<span class="text-slate-900 font-bold">CASE-2026-ALPHA</span>
+<span class="text-slate-400">/</span>
+<span class="text-slate-700 font-medium truncate">Op: Viper Syndicate - Financial &amp; CDR Correlation</span>
+</div>
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-md bg-slate-100 border border-slate-300 text-[11px] font-mono">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<span class="text-slate-700 font-medium">FastAPI + Neo4j Connected</span>
+<span class="text-slate-300">|</span>
+<span class="text-slate-500">14ms</span>
+</div>
+</div>
+<div class="flex items-center gap-3 shrink-0">
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-md bg-slate-100 border border-slate-300 text-xs">
+<span class="material-symbols-outlined text-slate-600 text-[18px]">shield_person</span>
+<span class="text-slate-800 font-medium">Analyst Sharma</span>
+<span class="text-slate-500 text-[11px] font-mono">ID: 881-INV</span>
+</div>
+<div class="w-8 h-8 rounded-full bg-slate-800 text-white flex items-center justify-center text-xs font-semibold font-mono shadow-sm ring-1 ring-slate-600">
+          AS
+        </div>
+</div>
+</div>
+<!-- Secondary Filter Subheader -->
+<div class="h-12 px-7 flex items-center justify-between bg-slate-200/60 text-xs border-b border-slate-300">
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 bg-white border border-slate-300 hover:border-slate-400 px-3 py-1.5 rounded-md text-slate-700 font-medium text-xs shadow-xs transition-colors">
+<span class="material-symbols-outlined text-[16px] text-slate-600">calendar_today</span>
+<span>Timeframe: Last 30 Days</span>
+<span class="material-symbols-outlined text-[16px] text-slate-400">arrow_drop_down</span>
+</button>
+<button class="flex items-center gap-2 bg-white border border-slate-300 hover:border-slate-400 px-3 py-1.5 rounded-md text-slate-700 font-medium text-xs shadow-xs transition-colors">
+<span class="material-symbols-outlined text-[16px] text-slate-600">category</span>
+<span>Entities: Shell Co / CDR / Crypto</span>
+<span class="material-symbols-outlined text-[16px] text-slate-400">arrow_drop_down</span>
+</button>
+<div class="flex items-center gap-2 bg-white border border-slate-300 px-3 py-1.5 rounded-md text-slate-700 font-medium text-xs shadow-xs">
+<span class="material-symbols-outlined text-[16px] text-slate-600">tune</span>
+<span>Threshold: ≥ 0.72 Centrality</span>
+</div>
+</div>
+<div class="flex items-center gap-2.5">
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-medium text-xs transition-colors shadow-xs" id="btn-run-analytics-header">
+<span class="material-symbols-outlined text-[16px] text-slate-600">scatter_plot</span>
+<span>Run Kingpin Analytics</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-slate-200 hover:bg-slate-300/80 border border-slate-300 text-slate-800 font-medium text-xs transition-colors shadow-xs">
+<span class="material-symbols-outlined text-[16px] text-slate-600">alt_route</span>
+<span>Predict Hidden Links</span>
+</button>
+<button class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-slate-700 hover:bg-slate-800 text-white font-medium text-xs transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[16px]">picture_as_pdf</span>
+<span>Export Court-Ready PDF</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Space with Generous Padding & Margin -->
+<main class="w-full px-8 pt-32 pb-10 bg-[#8292a5] flex-1">
+<div class="flex flex-col w-full gap-6 max-w-[1680px] mx-auto">
+<!-- Case Meta Header & Global Filter Bar (De-cluttered & Spacious) -->
+<div class="bg-[#f1f5f9] p-6 rounded-xl border border-slate-300 shadow-card flex flex-col gap-4">
+<div class="flex flex-wrap items-center justify-between gap-4">
+<div class="flex flex-wrap items-center gap-3.5">
+<span class="px-2.5 py-1 rounded-md bg-rose-50 border border-rose-200 text-rose-800 font-mono text-xs font-semibold flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-rose-600"></span>
+              CONFIDENTIAL // LAW ENFORCEMENT EXHIBIT
+            </span>
+<div class="flex items-center gap-2 font-mono text-xs text-slate-600">
+<span class="text-slate-800 font-bold bg-slate-200 px-2 py-0.5 rounded border border-slate-300">CASE #902-CRIMNET</span>
+<span class="text-slate-400">/</span>
+<span class="text-slate-800 font-medium text-[13px]">Operation Viper Hawk Illicit Syndicate</span>
+</div>
+</div>
+<!-- Quick Action Buttons -->
+<div class="flex items-center gap-2.5">
+<button class="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-medium text-xs transition-all shadow-xs" id="btn-run-analytics">
+<span class="material-symbols-outlined text-[17px] text-slate-600">radar</span>
+<span>Run Network Analytics</span>
+</button>
+<button class="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-slate-200 hover:bg-slate-300/80 border border-slate-300 text-slate-800 font-medium text-xs transition-all shadow-xs" id="btn-predict-toggle">
+<span class="material-symbols-outlined text-[17px] text-slate-600">alt_route</span>
+<span>Predict Hidden Links (<span class="font-bold text-slate-700" id="pred-badge-count">2</span>)</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-800 text-white font-medium text-xs transition-all shadow-sm">
+<span class="material-symbols-outlined text-[17px]">print</span>
+<span>Export Court-Ready PDF</span>
+</button>
+</div>
+</div>
+<!-- Filter Nodes & Timeline (Clean, relaxed spacing) -->
+<div class="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-slate-300">
+<!-- Entity Filter Chips -->
+<div class="flex flex-wrap items-center gap-2">
+<span class="text-xs text-slate-600 font-semibold mr-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-slate-600">filter_alt</span> Filter Nodes:
+            </span>
+<button class="filter-chip px-3 py-1.5 rounded-full bg-slate-700 text-white font-medium flex items-center gap-1.5 transition-all text-xs shadow-xs" data-type="all">
+<span>All (115)</span>
+</button>
+<button class="filter-chip px-3 py-1.5 rounded-full bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 flex items-center gap-1.5 transition-all text-xs" data-type="person">
+<span class="w-2 h-2 rounded-full bg-rose-500"></span> Person (18)
+            </button>
+<button class="filter-chip px-3 py-1.5 rounded-full bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 flex items-center gap-1.5 transition-all text-xs" data-type="phone">
+<span class="w-2 h-2 rounded-full bg-amber-500"></span> Phone / CDR (32)
+            </button>
+<button class="filter-chip px-3 py-1.5 rounded-full bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 flex items-center gap-1.5 transition-all text-xs" data-type="org">
+<span class="w-2 h-2 rounded-full bg-slate-600"></span> Shell Org (7)
+            </button>
+<button class="filter-chip px-3 py-1.5 rounded-full bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 flex items-center gap-1.5 transition-all text-xs" data-type="safehouse">
+<span class="w-2 h-2 rounded-full bg-sky-500"></span> Safehouse (8)
+            </button>
+<button class="filter-chip px-3 py-1.5 rounded-full bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 flex items-center gap-1.5 transition-all text-xs" data-type="tx">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span> Transactions (44)
+            </button>
+<button class="filter-chip px-3 py-1.5 rounded-full bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 flex items-center gap-1.5 transition-all text-xs" data-type="vehicle">
+<span class="w-2 h-2 rounded-full bg-slate-500"></span> Vehicle (6)
+            </button>
+</div>
+<!-- Timeline Slider -->
+<div class="flex items-center gap-3 bg-slate-200/70 border border-slate-300 px-4 py-1.5 rounded-lg text-xs font-mono">
+<span class="text-slate-600">Temporal Window:</span>
+<span class="text-slate-800 font-semibold">2026-01-01</span>
+<input class="w-28 h-1.5 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-slate-600" max="100" min="1" type="range" value="78"/>
+<span class="text-slate-900 font-semibold">2026-08-14</span>
+<div class="flex items-center gap-1 pl-2 border-l border-slate-300">
+<button class="px-2 py-0.5 rounded bg-white border border-slate-300 text-[11px] text-slate-600 hover:text-slate-900 hover:bg-slate-100">24h</button>
+<button class="px-2 py-0.5 rounded bg-white border border-slate-300 text-[11px] text-slate-600 hover:text-slate-900 hover:bg-slate-100">7D</button>
+<button class="px-2 py-0.5 rounded bg-white border border-slate-300 text-[11px] text-slate-600 hover:text-slate-900 hover:bg-slate-100">30D</button>
+<button class="px-2 py-0.5 rounded bg-slate-700 text-[11px] text-white font-semibold shadow-xs">ALL</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Primary Workspace 3-Column Grid with Relaxed Spacing -->
+<div class="grid grid-cols-12 gap-6 items-start w-full">
+<!-- LEFT PANEL: Kingpin & Network Analytics -->
+<div class="col-span-12 xl:col-span-3 flex flex-col gap-4">
+<div class="bg-[#f1f5f9] p-5 rounded-xl border border-slate-300 shadow-card flex flex-col gap-4">
+<div class="flex items-center justify-between pb-3 border-b border-slate-300">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-slate-200 text-slate-700 border border-slate-300 flex items-center justify-center">
+<span class="material-symbols-outlined text-[19px]">radar</span>
+</div>
+<div class="flex flex-col">
+<h2 class="font-bold text-sm text-slate-900 tracking-tight">Kingpin Centrality</h2>
+<span class="text-[11px] font-mono text-slate-500">Eigenvector + Betweenness</span>
+</div>
+</div>
+<div class="flex items-center gap-1 bg-slate-200/80 border border-slate-300 px-2.5 py-1 rounded-md font-mono text-[11px] text-slate-700">
+<span>Top</span>
+<span class="text-slate-900 font-bold">5</span>
+<span class="text-slate-500">/ 25</span>
+</div>
+</div>
+<div class="text-[11px] text-slate-600 font-mono bg-slate-200/60 border border-slate-300 px-3 py-2 rounded-lg flex items-center justify-between">
+<span class="text-slate-500">WEIGHT:</span>
+<span class="text-slate-700 font-semibold">BW 40% · PR 35% · AA 25%</span>
+</div>
+<!-- Ranked Entity Cards (Spacious & Clean) -->
+<div class="flex flex-col gap-3 max-h-[620px] overflow-y-auto pr-1" id="kingpin-list">
+<!-- Actor 1: Vikram Malhotra -->
+<div class="actor-card bg-rose-50/50 hover:bg-rose-50/80 p-3.5 rounded-lg border-2 border-rose-300 cursor-pointer transition-all flex flex-col gap-3 shadow-xs" data-actor-id="node-razor">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded-md bg-rose-100 border border-rose-200 flex items-center justify-center text-rose-700">
+<span class="material-symbols-outlined text-[17px]">person</span>
+</div>
+<div>
+<div class="font-bold text-xs text-slate-900">#1 Vikram "Razor" Malhotra</div>
+<div class="text-[11px] text-slate-500 font-mono">Person · Syndicate High Comm</div>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-rose-100 border border-rose-200 font-mono text-[10px] font-bold text-rose-800">
+                    0.94 CRITICAL
+                  </span>
+</div>
+<div class="grid grid-cols-3 gap-2 text-[10px] font-mono">
+<div class="bg-white border border-rose-200/70 p-2 rounded flex flex-col gap-1 shadow-2xs">
+<div class="flex justify-between text-slate-500 text-[10px]"><span>BETW</span><span class="text-slate-800 font-bold">0.89</span></div>
+<div class="w-full bg-slate-200 h-1.5 rounded overflow-hidden">
+<div class="bg-rose-500 h-full rounded" style="width: 89%"></div>
+</div>
+</div>
+<div class="bg-white border border-rose-200/70 p-2 rounded flex flex-col gap-1 shadow-2xs">
+<div class="flex justify-between text-slate-500 text-[10px]"><span>PAGERK</span><span class="text-slate-800 font-bold">0.96</span></div>
+<div class="w-full bg-slate-200 h-1.5 rounded overflow-hidden">
+<div class="bg-rose-500 h-full rounded" style="width: 96%"></div>
+</div>
+</div>
+<div class="bg-white border border-rose-200/70 p-2 rounded flex flex-col gap-1 shadow-2xs">
+<div class="flex justify-between text-slate-500 text-[10px]"><span>ADAMIC</span><span class="text-slate-800 font-bold">0.78</span></div>
+<div class="w-full bg-slate-200 h-1.5 rounded overflow-hidden">
+<div class="bg-rose-500 h-full rounded" style="width: 78%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Actor 2: Apex Global Logistics -->
+<div class="actor-card bg-white hover:bg-slate-50 p-3.5 rounded-lg border border-slate-300 cursor-pointer transition-all flex flex-col gap-3 shadow-xs" data-actor-id="node-apex">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded-md bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700">
+<span class="material-symbols-outlined text-[17px]">corporate_fare</span>
+</div>
+<div>
+<div class="font-bold text-xs text-slate-900">#2 Apex Global Logistics LLC</div>
+<div class="text-[11px] text-slate-500 font-mono">Shell Corp · Free Zone Export</div>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-amber-50 border border-amber-200 font-mono text-[10px] font-bold text-amber-800">
+                    0.88 HIGH
+                  </span>
+</div>
+<div class="grid grid-cols-3 gap-2 text-[10px] font-mono">
+<div class="bg-slate-100 border border-slate-300 p-2 rounded flex flex-col gap-1">
+<div class="flex justify-between text-slate-500 text-[10px]"><span>BETW</span><span class="text-slate-800 font-bold">0.82</span></div>
+<div class="w-full bg-slate-200 h-1.5 rounded overflow-hidden">
+<div class="bg-slate-600 h-full rounded" style="width: 82%"></div>
+</div>
+</div>
+<div class="bg-slate-100 border border-slate-300 p-2 rounded flex flex-col gap-1">
+<div class="flex justify-between text-slate-500 text-[10px]"><span>PAGERK</span><span class="text-slate-800 font-bold">0.85</span></div>
+<div class="w-full bg-slate-200 h-1.5 rounded overflow-hidden">
+<div class="bg-slate-600 h-full rounded" style="width: 85%"></div>
+</div>
+</div>
+<div class="bg-slate-100 border border-slate-300 p-2 rounded flex flex-col gap-1">
+<div class="flex justify-between text-slate-500 text-[10px]"><span>ADAMIC</span><span class="text-slate-800 font-bold">0.74</span></div>
+<div class="w-full bg-slate-200 h-1.5 rounded overflow-hidden">
+<div class="bg-slate-600 h-full rounded" style="width: 74%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Actor 3: Burner SIM Node -->
+<div class="actor-card bg-white hover:bg-slate-50 p-3.5 rounded-lg border border-slate-300 cursor-pointer transition-all flex flex-col gap-3 shadow-xs" data-actor-id="node-sim">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded-md bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700">
+<span class="material-symbols-outlined text-[17px]">smartphone</span>
+</div>
+<div>
+<div class="font-bold text-xs text-slate-900">#3 MSISDN +91-98721-XXXXX</div>
+<div class="text-[11px] text-slate-500 font-mono">Burner · Rotating IMEI</div>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-amber-50 border border-amber-200 font-mono text-[10px] font-bold text-amber-800">
+                    0.81 HIGH
+                  </span>
+</div>
+<div class="grid grid-cols-3 gap-2 text-[10px] font-mono">
+<div class="bg-slate-100 border border-slate-300 p-2 rounded flex flex-col gap-1">
+<div class="flex justify-between text-slate-500 text-[10px]"><span>BETW</span><span class="text-slate-800 font-bold">0.71</span></div>
+<div class="w-full bg-slate-200 h-1.5 rounded overflow-hidden">
+<div class="bg-slate-600 h-full rounded" style="width: 71%"></div>
+</div>
+</div>
+<div class="bg-slate-100 border border-slate-300 p-2 rounded flex flex-col gap-1">
+<div class="flex justify-between text-slate-500 text-[10px]"><span>PAGERK</span><span class="text-slate-800 font-bold">0.79</span></div>
+<div class="w-full bg-slate-200 h-1.5 rounded overflow-hidden">
+<div class="bg-slate-600 h-full rounded" style="width: 79%"></div>
+</div>
+</div>
+<div class="bg-slate-100 border border-slate-300 p-2 rounded flex flex-col gap-1">
+<div class="flex justify-between text-slate-500 text-[10px]"><span>ADAMIC</span><span class="text-slate-800 font-bold">0.82</span></div>
+<div class="w-full bg-slate-200 h-1.5 rounded overflow-hidden">
+<div class="bg-slate-600 h-full rounded" style="width: 82%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Actor 4: Safehouse Sector-4 -->
+<div class="actor-card bg-white hover:bg-slate-50 p-3.5 rounded-lg border border-slate-300 cursor-pointer transition-all flex flex-col gap-3 shadow-xs" data-actor-id="node-safehouse">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded-md bg-slate-200 border border-slate-300 flex items-center justify-center text-slate-600">
+<span class="material-symbols-outlined text-[17px]">home_work</span>
+</div>
+<div>
+<div class="font-bold text-xs text-slate-900">#4 Safehouse Sector-4 Flat 9C</div>
+<div class="text-[11px] text-slate-500 font-mono">Location · Cache Facility</div>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-slate-200 border border-slate-300 font-mono text-[10px] font-semibold text-slate-700">
+                    0.64 MED
+                  </span>
+</div>
+<div class="grid grid-cols-3 gap-2 text-[10px] font-mono">
+<div class="bg-slate-100 border border-slate-300 p-2 rounded flex flex-col gap-1">
+<div class="flex justify-between text-slate-500 text-[10px]"><span>BETW</span><span class="text-slate-800 font-bold">0.58</span></div>
+<div class="w-full bg-slate-200 h-1.5 rounded overflow-hidden">
+<div class="bg-slate-600 h-full rounded" style="width: 58%"></div>
+</div>
+</div>
+<div class="bg-slate-100 border border-slate-300 p-2 rounded flex flex-col gap-1">
+<div class="flex justify-between text-slate-500 text-[10px]"><span>PAGERK</span><span class="text-slate-800 font-bold">0.62</span></div>
+<div class="w-full bg-slate-200 h-1.5 rounded overflow-hidden">
+<div class="bg-slate-600 h-full rounded" style="width: 62%"></div>
+</div>
+</div>
+<div class="bg-slate-100 border border-slate-300 p-2 rounded flex flex-col gap-1">
+<div class="flex justify-between text-slate-500 text-[10px]"><span>ADAMIC</span><span class="text-slate-800 font-bold">0.66</span></div>
+<div class="w-full bg-slate-200 h-1.5 rounded overflow-hidden">
+<div class="bg-slate-600 h-full rounded" style="width: 66%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Actor 5: Hawala Node TR-994 -->
+<div class="actor-card bg-white hover:bg-slate-50 p-3.5 rounded-lg border border-slate-300 cursor-pointer transition-all flex flex-col gap-3 shadow-xs" data-actor-id="node-hawala">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded-md bg-slate-200 border border-slate-300 flex items-center justify-center text-slate-600">
+<span class="material-symbols-outlined text-[17px]">payments</span>
+</div>
+<div>
+<div class="font-bold text-xs text-slate-900">#5 Hawala Node TR-994</div>
+<div class="text-[11px] text-slate-500 font-mono">Financial · Offshore Settle</div>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-slate-200 border border-slate-300 font-mono text-[10px] font-semibold text-slate-700">
+                    0.59 MED
+                  </span>
+</div>
+<div class="grid grid-cols-3 gap-2 text-[10px] font-mono">
+<div class="bg-slate-100 border border-slate-300 p-2 rounded flex flex-col gap-1">
+<div class="flex justify-between text-slate-500 text-[10px]"><span>BETW</span><span class="text-slate-800 font-bold">0.52</span></div>
+<div class="w-full bg-slate-200 h-1.5 rounded overflow-hidden">
+<div class="bg-slate-600 h-full rounded" style="width: 52%"></div>
+</div>
+</div>
+<div class="bg-slate-100 border border-slate-300 p-2 rounded flex flex-col gap-1">
+<div class="flex justify-between text-slate-500 text-[10px]"><span>PAGERK</span><span class="text-slate-800 font-bold">0.61</span></div>
+<div class="w-full bg-slate-200 h-1.5 rounded overflow-hidden">
+<div class="bg-slate-600 h-full rounded" style="width: 61%"></div>
+</div>
+</div>
+<div class="bg-slate-100 border border-slate-300 p-2 rounded flex flex-col gap-1">
+<div class="flex justify-between text-slate-500 text-[10px]"><span>ADAMIC</span><span class="text-slate-800 font-bold">0.55</span></div>
+<div class="w-full bg-slate-200 h-1.5 rounded overflow-hidden">
+<div class="bg-slate-600 h-full rounded" style="width: 55%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- CENTER PANEL: Graph Canvas & Inferred Links -->
+<div class="col-span-12 xl:col-span-6 flex flex-col gap-6">
+<div class="relative bg-[#f8fafc] rounded-xl border border-slate-300 shadow-card overflow-hidden min-h-[580px] flex flex-col">
+<!-- Canvas Floating Top Toolbar -->
+<div class="absolute top-4 left-4 right-4 z-20 flex items-center justify-between pointer-events-none">
+<div class="flex items-center gap-2 bg-[#f1f5f9]/95 backdrop-blur-sm border border-slate-300 px-3.5 py-1.5 rounded-lg shadow-sm pointer-events-auto">
+<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+<span class="font-mono text-xs text-slate-800 font-semibold">NEO4J GRAPH CANVAS</span>
+<span class="text-slate-500 text-[11px] font-mono">| FORCE-DIRECTED</span>
+</div>
+<div class="flex items-center gap-1 bg-[#f1f5f9]/95 backdrop-blur-sm border border-slate-300 p-1 rounded-lg shadow-sm pointer-events-auto">
+<button class="w-8 h-8 rounded flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors" id="btn-zoom-in" title="Zoom In">
+<span class="material-symbols-outlined text-[19px]">add</span>
+</button>
+<button class="w-8 h-8 rounded flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors" id="btn-zoom-out" title="Zoom Out">
+<span class="material-symbols-outlined text-[19px]">remove</span>
+</button>
+<button class="w-8 h-8 rounded flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors" id="btn-fit" title="Fit to Screen">
+<span class="material-symbols-outlined text-[19px]">filter_center_focus</span>
+</button>
+<button class="w-8 h-8 rounded flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors" id="btn-physics" title="Toggle Layout Refresh">
+<span class="material-symbols-outlined text-[19px]">scatter_plot</span>
+</button>
+</div>
+</div>
+<!-- Graph Legend (Bottom Left) -->
+<div class="absolute bottom-4 left-4 z-20 bg-[#f1f5f9]/95 backdrop-blur-sm border border-slate-300 p-3 rounded-lg shadow-sm pointer-events-auto flex flex-col gap-2 font-mono text-[11px]">
+<div class="text-slate-600 font-semibold uppercase tracking-wider text-[10px]">Forensic Classification</div>
+<div class="flex items-center gap-3.5">
+<div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-rose-600"></span><span class="text-slate-700">&gt;0.85 Kingpin</span></div>
+<div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span><span class="text-slate-700">0.65–0.85 High</span></div>
+<div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-slate-600"></span><span class="text-slate-700">0.40–0.65 Med</span></div>
+<div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span><span class="text-slate-700">&lt;0.40 Peripheral</span></div>
+</div>
+<div class="flex items-center gap-2 pt-1 border-t border-slate-300">
+<span class="w-4 border-b-2 border-dashed border-slate-600"></span>
+<span class="text-slate-700 font-medium">Predicted Link (ML Adamic-Adar)</span>
+</div>
+</div>
+<!-- SVG Professional Architectural Graph Visualizer -->
+<svg class="w-full h-[580px] bg-slate-100/50 cursor-grab active:cursor-grabbing select-none" id="network-svg" viewbox="0 0 800 580">
+<defs>
+<filter height="180%" id="node-shadow" width="180%" x="-40%" y="-40%">
+<fedropshadow dx="0" dy="2" flood-color="#0f172a" flood-opacity="0.1" stddeviation="3"></fedropshadow>
+</filter>
+<marker id="arrow-slate" markerheight="6" markerwidth="6" orient="auto-start-reverse" refx="20" refy="5" viewbox="0 0 10 10">
+<path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"></path>
+</marker>
+<marker id="arrow-crimson" markerheight="6" markerwidth="6" orient="auto-start-reverse" refx="22" refy="5" viewbox="0 0 10 10">
+<path d="M 0 0 L 10 5 L 0 10 z" fill="#dc2626"></path>
+</marker>
+<marker id="arrow-predicted" markerheight="6" markerwidth="6" orient="auto-start-reverse" refx="20" refy="5" viewbox="0 0 10 10">
+<path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"></path>
+</marker>
+<!-- Architectural Grid Pattern: Subtle dots on canvas -->
+<pattern height="24" id="grid-dots" patternunits="userSpaceOnUse" width="24">
+<circle cx="2" cy="2" fill="#94a3b8" r="1.1"></circle>
+</pattern>
+</defs>
+<rect fill="url(#grid-dots)" height="100%" width="100%"></rect>
+<!-- Edges Layer -->
+<g id="edges-group">
+<!-- Vikram (400, 250) -> Burner SIM (220, 160) -->
+<line marker-end="url(#arrow-slate)" stroke="#64748b" stroke-width="1.6" x1="400" x2="220" y1="250" y2="160"></line>
+<rect fill="#ffffff" height="18" rx="4" stroke="#cbd5e1" stroke-width="1" width="76" x="255" y="190"></rect>
+<text fill="#334155" font-family="JetBrains Mono, monospace" font-size="9" font-weight="600" text-anchor="middle" x="293" y="202">CALLS (47x)</text>
+<!-- Vikram (400, 250) -> Apex Logistics (590, 180) -->
+<line marker-end="url(#arrow-crimson)" stroke="#dc2626" stroke-width="2" x1="400" x2="590" y1="250" y2="180"></line>
+<rect fill="#fef2f2" height="18" rx="4" stroke="#fecaca" stroke-width="1" width="138" x="430" y="200"></rect>
+<text fill="#991b1b" font-family="JetBrains Mono, monospace" font-size="9" font-weight="600" text-anchor="middle" x="499" y="212">OWNS / CONTROLS (95%)</text>
+<!-- Vikram (400, 250) -> Safehouse (330, 410) -->
+<line marker-end="url(#arrow-slate)" stroke="#64748b" stroke-width="1.6" x1="400" x2="330" y1="250" y2="410"></line>
+<rect fill="#ffffff" height="18" rx="4" stroke="#cbd5e1" stroke-width="1" width="88" x="310" y="325"></rect>
+<text fill="#334155" font-family="JetBrains Mono, monospace" font-size="9" font-weight="600" text-anchor="middle" x="354" y="337">MEETS_AT (12x)</text>
+<!-- Apex (590, 180) -> Hawala (540, 400) -->
+<line marker-end="url(#arrow-slate)" stroke="#64748b" stroke-width="1.8" x1="590" x2="540" y1="180" y2="400"></line>
+<rect fill="#ffffff" height="18" rx="4" stroke="#cbd5e1" stroke-width="1" width="112" x="515" y="280"></rect>
+<text fill="#334155" font-family="JetBrains Mono, monospace" font-size="9" font-weight="600" text-anchor="middle" x="571" y="292">TRANSACTS ($1.2M)</text>
+<!-- Hawala (540, 400) -> D-Company Liaison (690, 430) -->
+<line marker-end="url(#arrow-slate)" stroke="#64748b" stroke-width="1.5" x1="540" x2="690" y1="400" y2="430"></line>
+<rect fill="#ffffff" height="18" rx="4" stroke="#cbd5e1" stroke-width="1" width="96" x="568" y="405"></rect>
+<text fill="#475569" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle" x="616" y="417">OFFSHORE ROUTE</text>
+<!-- Safehouse (330, 410) -> Vehicle (180, 420) -->
+<line marker-end="url(#arrow-slate)" stroke="#64748b" stroke-width="1.5" x1="330" x2="180" y1="410" y2="420"></line>
+<rect fill="#ffffff" height="18" rx="4" stroke="#cbd5e1" stroke-width="1" width="84" x="210" y="405"></rect>
+<text fill="#475569" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle" x="252" y="417">PARKED_NEAR</text>
+<!-- PREDICTED COVERT LINK 1: Vikram (400, 250) <---> D-Company Liaison (690, 430) (Dimmed Slate Accent) --&gt;
+<g class="transition-opacity duration-300" id="pred-link-1">
+<path d="M 400 250 Q 560 300 690 430" fill="none" marker-end="url(#arrow-predicted)" stroke="#475569" stroke-dasharray="6,4" stroke-width="2"></path>
+<rect fill="#f1f5f9" height="18" rx="4" stroke="#94a3b8" stroke-width="1" width="138" x="522" y="340"></rect>
+<text fill="#1e293b" font-family="JetBrains Mono, monospace" font-size="9" font-weight="700" text-anchor="middle" x="591" y="352">PREDICTED: CONF 89.4%</text>
+</g>
+<!-- PREDICTED COVERT LINK 2: Apex Logistics (590, 180) <---> Pan-Asian Shell (710, 230) (Dimmed Slate Accent) --&gt;
+<g class="transition-opacity duration-300" id="pred-link-2">
+<line stroke="#475569" stroke-dasharray="5,4" stroke-width="1.8" x1="590" x2="710" y1="180" y2="230"></line>
+<rect fill="#f1f5f9" height="18" rx="4" stroke="#94a3b8" stroke-width="1" width="108" x="618" y="195"></rect>
+<text fill="#1e293b" font-family="JetBrains Mono, monospace" font-size="9" font-weight="700" text-anchor="middle" x="672" y="207">PREDICTED 78.1%</text>
+</g>
+</g>
+<!-- Nodes Layer -->
+<g id="nodes-group">
+<!-- Vehicle MH-02-CD-9102 (180, 420) -->
+<g class="graph-node cursor-pointer group" data-target="node-vehicle" filter="url(#node-shadow)" transform="translate(180, 420)">
+<circle fill="#ffffff" r="20" stroke="#64748b" stroke-width="1.5"></circle>
+<text fill="#475569" font-family="Material Symbols Outlined" font-size="18" text-anchor="middle" x="0" y="6">directions_car</text>
+<text fill="#1e293b" font-family="IBM Plex Sans, sans-serif" font-size="11" font-weight="600" text-anchor="middle" x="0" y="33">SUV MH-02</text>
+<text fill="#475569" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle" x="0" y="46">Score: 0.31</text>
+</g>
+<!-- Safehouse Sector-4 (330, 410) -->
+<g class="graph-node cursor-pointer group" data-target="node-safehouse" filter="url(#node-shadow)" transform="translate(330, 410)">
+<circle fill="#ffffff" r="24" stroke="#0284c7" stroke-width="2"></circle>
+<text fill="#0284c7" font-family="Material Symbols Outlined" font-size="20" text-anchor="middle" x="0" y="6">home_work</text>
+<text fill="#0f172a" font-family="IBM Plex Sans, sans-serif" font-size="11" font-weight="600" text-anchor="middle" x="0" y="38">Safehouse #4</text>
+<text fill="#334155" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle" x="0" y="51">Score: 0.64</text>
+</g>
+<!-- Burner SIM (220, 160) -->
+<g class="graph-node cursor-pointer group" data-target="node-sim" filter="url(#node-shadow)" transform="translate(220, 160)">
+<circle fill="#fffbeb" r="26" stroke="#d97706" stroke-width="2"></circle>
+<text fill="#b45309" font-family="Material Symbols Outlined" font-size="20" text-anchor="middle" x="0" y="6">smartphone</text>
+<text fill="#0f172a" font-family="IBM Plex Sans, sans-serif" font-size="11" font-weight="600" text-anchor="middle" x="0" y="40">SIM +91-98721</text>
+<text fill="#b45309" font-family="JetBrains Mono, monospace" font-size="9" font-weight="600" text-anchor="middle" x="0" y="53">0.81 [HIGH]</text>
+</g>
+<!-- Hawala Node TR-994 (540, 400) -->
+<g class="graph-node cursor-pointer group" data-target="node-hawala" filter="url(#node-shadow)" transform="translate(540, 400)">
+<circle fill="#ffffff" r="24" stroke="#475569" stroke-width="2"></circle>
+<text fill="#475569" font-family="Material Symbols Outlined" font-size="20" text-anchor="middle" x="0" y="6">paid</text>
+<text fill="#0f172a" font-family="IBM Plex Sans, sans-serif" font-size="11" font-weight="600" text-anchor="middle" x="0" y="38">Hawala TR-994</text>
+<text fill="#475569" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle" x="0" y="51">Score: 0.59</text>
+</g>
+<!-- Apex Global Logistics (590, 180) -->
+<g class="graph-node cursor-pointer group" data-target="node-apex" filter="url(#node-shadow)" transform="translate(590, 180)">
+<circle fill="#fffbeb" r="28" stroke="#d97706" stroke-width="2"></circle>
+<text fill="#b45309" font-family="Material Symbols Outlined" font-size="22" text-anchor="middle" x="0" y="7">corporate_fare</text>
+<text fill="#0f172a" font-family="IBM Plex Sans, sans-serif" font-size="11" font-weight="700" text-anchor="middle" x="0" y="42">Apex Global LLC</text>
+<text fill="#b45309" font-family="JetBrains Mono, monospace" font-size="9" font-weight="600" text-anchor="middle" x="0" y="55">0.88 [HIGH]</text>
+</g>
+<!-- D-Company Liaison (690, 430) -->
+<g class="graph-node cursor-pointer group" data-target="node-liaison" filter="url(#node-shadow)" transform="translate(690, 430)">
+<circle fill="#fffbeb" r="22" stroke="#d97706" stroke-width="2"></circle>
+<text fill="#b45309" font-family="Material Symbols Outlined" font-size="18" text-anchor="middle" x="0" y="6">person</text>
+<text fill="#0f172a" font-family="IBM Plex Sans, sans-serif" font-size="11" font-weight="600" text-anchor="middle" x="0" y="36">Liaison Farhan</text>
+<text fill="#475569" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle" x="0" y="48">Target #011</text>
+</g>
+<!-- Pan-Asian Shell (710, 230) -->
+<g class="graph-node cursor-pointer group" data-target="node-panasian" filter="url(#node-shadow)" transform="translate(710, 230)">
+<circle fill="#ffffff" r="20" stroke="#64748b" stroke-width="1.5"></circle>
+<text fill="#475569" font-family="Material Symbols Outlined" font-size="18" text-anchor="middle" x="0" y="6">account_balance</text>
+<text fill="#1e293b" font-family="IBM Plex Sans, sans-serif" font-size="10.5" font-weight="600" text-anchor="middle" x="0" y="32">Pan-Asian HK</text>
+</g>
+<!-- CRITICAL KINGPIN: Vikram Malhotra (400, 250) -->
+<g class="graph-node cursor-pointer group" data-target="node-razor" filter="url(#node-shadow)" transform="translate(400, 250)">
+<!-- Concentric Investigation Ring -->
+<circle fill="none" opacity="0.4" r="46" stroke="#dc2626" stroke-dasharray="4,4" stroke-width="1.5"></circle>
+<circle fill="#fef2f2" r="32" stroke="#dc2626" stroke-width="2.5"></circle>
+<!-- Tag Badge -->
+<g transform="translate(0, -32)">
+<rect fill="#dc2626" height="15" rx="3" width="22" x="-11" y="-7"></rect>
+<text fill="#ffffff" font-family="Material Symbols Outlined" font-size="12" text-anchor="middle" x="0" y="4">shield</text>
+</g>
+<text fill="#dc2626" font-family="Material Symbols Outlined" font-size="26" text-anchor="middle" x="0" y="9">person</text>
+<!-- Labels -->
+<text fill="#0f172a" font-family="IBM Plex Sans, sans-serif" font-size="12" font-weight="700" text-anchor="middle" x="0" y="48">Vikram Malhotra</text>
+<rect fill="#dc2626" height="16" rx="3" width="90" x="-45" y="55"></rect>
+<text fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="9" font-weight="700" text-anchor="middle" x="0" y="66">KINGPIN: 0.94</text>
+</g>
+</g>
+</svg>
+<!-- Floating Tooltip -->
+<div class="absolute hidden pointer-events-none z-30 bg-white border border-slate-300 p-3 rounded-lg shadow-xl font-mono text-[11px] flex flex-col gap-1 text-slate-900" id="node-tooltip">
+<div class="font-bold text-slate-900 text-xs" id="tip-title">Entity Details</div>
+<div class="text-slate-500 text-[10px]" id="tip-sub">Neo4j Record</div>
+<div class="text-rose-700 font-semibold" id="tip-score">Score: 0.94</div>
+</div>
+</div>
+<!-- BOTTOM DOCK: Predict Hidden Links Engine (Spacious & Clean) -->
+<div class="bg-[#f1f5f9] p-5 rounded-xl border border-slate-300 shadow-card flex flex-col gap-4">
+<div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-300">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-slate-200 text-slate-700 border border-slate-300 flex items-center justify-center">
+<span class="material-symbols-outlined text-[19px]">alt_route</span>
+</div>
+<div class="flex items-center gap-2">
+<h3 class="font-bold text-sm text-slate-900">Predict Hidden Links Engine</h3>
+<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-200 border border-slate-300 text-slate-800 font-medium">GET /predict-links</span>
+</div>
+</div>
+<div class="flex items-center gap-3 font-mono text-xs">
+<div class="flex items-center gap-2.5 bg-white border border-slate-300 px-3 py-1.5 rounded-lg">
+<span class="text-slate-500 text-[11px]">CONFIDENCE ≥</span>
+<span class="text-slate-800 font-bold" id="thresh-val">0.75</span>
+<input class="w-24 h-1.5 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-slate-600" id="pred-slider" max="95" min="50" type="range" value="75"/>
+</div>
+<button class="px-3 py-1.5 rounded-lg bg-white hover:bg-slate-100 border border-slate-300 text-xs text-slate-700 font-medium flex items-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-[15px] text-slate-600">refresh</span> Recompute
+                </button>
+</div>
+</div>
+<!-- Predicted Links List -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Prediction Card 1 -->
+<div class="bg-white border border-slate-300 hover:border-slate-400 p-4 rounded-xl flex flex-col justify-between gap-3 transition-colors shadow-2xs">
+<div class="flex items-start justify-between gap-2">
+<div class="flex items-center gap-2 text-xs font-mono">
+<span class="text-slate-900 font-bold">Person_004 (Malhotra)</span>
+<span class="text-slate-400 material-symbols-outlined text-[15px]">swap_horiz</span>
+<span class="text-slate-900 font-bold">Person_011 (Liaison)</span>
+</div>
+<span class="px-2 py-0.5 rounded bg-slate-200 border border-slate-300 text-slate-800 font-mono text-[10px] font-bold">
+                    89.4% CONF
+                  </span>
+</div>
+<p class="text-slate-600 text-xs leading-relaxed">
+<strong class="text-slate-900 font-medium">3 shared clandestine nodes:</strong> Phone_082 burner, Safehouse Sector-4 cache, and Hawala Node TR-994. Zero direct telco calls on record indicates active operational evasion.
+                </p>
+<div class="flex items-center justify-between pt-2 border-t border-slate-200 font-mono text-[11px]">
+<span class="text-slate-500">Adamic-Adar (3.42)</span>
+<button class="btn-highlight-edge px-3 py-1 rounded-md bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-xs font-medium transition-colors flex items-center gap-1.5 shadow-2xs" data-link="pred-link-1">
+<span class="material-symbols-outlined text-[15px] text-slate-600">visibility</span> Focus Link
+                  </button>
+</div>
+</div>
+<!-- Prediction Card 2 -->
+<div class="bg-white border border-slate-300 hover:border-slate-400 p-4 rounded-xl flex flex-col justify-between gap-3 transition-colors shadow-2xs">
+<div class="flex items-start justify-between gap-2">
+<div class="flex items-center gap-2 text-xs font-mono">
+<span class="text-slate-900 font-bold">Apex Logistics LLC</span>
+<span class="text-slate-400 material-symbols-outlined text-[15px]">swap_horiz</span>
+<span class="text-slate-900 font-bold">Pan-Asian Shell</span>
+</div>
+<span class="px-2 py-0.5 rounded bg-slate-200 border border-slate-300 text-slate-800 font-mono text-[10px] font-bold">
+                    78.1% CONF
+                  </span>
+</div>
+<p class="text-slate-600 text-xs leading-relaxed">
+<strong class="text-slate-900 font-medium">Corporate co-movement:</strong> Shared registered corporate agent address in Ras Al Khaimah and cross-collateralized SWIFT clearing slips routed via offshore crypto OTC desk.
+                </p>
+<div class="flex items-center justify-between pt-2 border-t border-slate-200 font-mono text-[11px]">
+<span class="text-slate-500">Jaccard Cosine (0.78)</span>
+<button class="btn-highlight-edge px-3 py-1 rounded-md bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-xs font-medium transition-colors flex items-center gap-1.5 shadow-2xs" data-link="pred-link-2">
+<span class="material-symbols-outlined text-[15px] text-slate-600">visibility</span> Focus Link
+                  </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT PANEL: Entity Detail & Evidence Lineage Inspector -->
+<div class="col-span-12 xl:col-span-3 flex flex-col gap-4">
+<div class="bg-[#f1f5f9] p-5 rounded-xl border border-slate-300 shadow-card flex flex-col gap-4">
+<!-- Selected Entity Header -->
+<div class="flex flex-col gap-3 pb-3 border-b border-slate-300">
+<div class="flex items-center justify-between">
+<span class="text-[11px] font-mono text-slate-500 font-medium flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-slate-600">verified_user</span> GET /entity/target-004
+                </span>
+<span class="px-2 py-0.5 rounded bg-rose-50 border border-rose-200 font-mono text-[10px] font-bold text-rose-800">
+                  PRIORITY 1 TARGET
+                </span>
+</div>
+<div class="flex items-center gap-3.5">
+<div class="w-12 h-12 rounded-xl bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-700 shrink-0">
+<span class="material-symbols-outlined text-[26px]">person</span>
+</div>
+<div class="flex flex-col min-w-0">
+<h3 class="font-bold text-base text-slate-900 truncate">Vikram "Razor" Malhotra</h3>
+<span class="text-xs font-mono text-slate-500 truncate">Alias: V-Razor, Tiger-09, Boss-DXB</span>
+</div>
+</div>
+</div>
+<!-- Threat Index Banner -->
+<div class="bg-rose-50/70 border border-rose-200 p-3 rounded-lg flex items-center justify-between text-xs font-mono">
+<div class="flex items-center gap-2 text-rose-800 font-bold">
+<span class="material-symbols-outlined text-[18px] text-rose-600">warning</span>
+<span>CRITICAL KINGPIN</span>
+</div>
+<span class="text-rose-900 font-extrabold text-sm">0.94 / 1.0</span>
+</div>
+<!-- Metric Radar/Bar Indicator Table -->
+<div class="bg-white border border-slate-300 p-3.5 rounded-lg flex flex-col gap-3 font-mono text-xs">
+<div class="flex justify-between items-center text-[10px] text-slate-500">
+<span>CENTRALITY METRIC PROFILE</span>
+<span class="text-slate-700 font-semibold">LE-CONFIRMED</span>
+</div>
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between text-xs">
+<span class="text-slate-600">Betweenness Centrality</span>
+<span class="text-slate-900 font-bold">0.89</span>
+</div>
+<div class="w-full bg-slate-200 h-2 rounded overflow-hidden">
+<div class="bg-slate-600 h-full rounded" style="width: 89%"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between text-xs">
+<span class="text-slate-600">PageRank Influence</span>
+<span class="text-slate-900 font-bold">0.96</span>
+</div>
+<div class="w-full bg-slate-200 h-2 rounded overflow-hidden">
+<div class="bg-slate-600 h-full rounded" style="width: 96%"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between text-xs">
+<span class="text-slate-600">Degree Centrality (38 Conns)</span>
+<span class="text-slate-900 font-bold">0.82</span>
+</div>
+<div class="w-full bg-slate-200 h-2 rounded overflow-hidden">
+<div class="bg-slate-600 h-full rounded" style="width: 82%"></div>
+</div>
+</div>
+</div>
+<!-- Node Properties Key-Value Table -->
+<div class="flex flex-col gap-1.5 font-mono text-xs">
+<span class="text-slate-600 text-[10px] uppercase font-semibold">Entity Metadata</span>
+<div class="bg-white border border-slate-300 rounded-lg p-3 flex flex-col gap-2 text-xs">
+<div class="flex justify-between py-1 border-b border-slate-200">
+<span class="text-slate-500">Neo4j Node ID:</span>
+<span class="text-slate-800 font-semibold">neo4j://node/84920</span>
+</div>
+<div class="flex justify-between py-1 border-b border-slate-200">
+<span class="text-slate-500">Primary MSISDN:</span>
+<span class="text-slate-800 font-semibold">+91-98721-XXXXX</span>
+</div>
+<div class="flex justify-between py-1 border-b border-slate-200">
+<span class="text-slate-500">First Detected:</span>
+<span class="text-slate-700">2025-11-04 09:12 UTC</span>
+</div>
+<div class="flex justify-between py-1">
+<span class="text-slate-500">Direct Topology:</span>
+<span class="text-slate-800 font-bold">24 In // 14 Out</span>
+</div>
+</div>
+</div>
+<!-- Evidence Lineage & Sec 65B Chain of Custody -->
+<div class="flex flex-col gap-2.5">
+<div class="flex items-center justify-between">
+<span class="text-slate-700 font-mono text-xs uppercase font-semibold flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-slate-500">gavel</span>
+                  Evidence Lineage (Sec. 65B Certified)
+                </span>
+<span class="text-emerald-700 font-mono text-[11px] font-bold">VERIFIED</span>
+</div>
+<div class="flex flex-col gap-2">
+<!-- Evidence Item 1 -->
+<div class="bg-white border border-slate-300 p-3 rounded-lg flex flex-col gap-1">
+<div class="flex items-center justify-between font-mono text-[11px]">
+<span class="text-slate-900 font-semibold flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-slate-600">cell_tower</span>
+                      EXHIBIT #E-01 · CDR TOWER DUMP
+                    </span>
+<span class="text-slate-500 text-[10px]">2026-08-14</span>
+</div>
+<p class="text-slate-600 text-xs leading-relaxed">
+                    Cell Tower 14B Sector 9, 02:14:22 UTC. IMEI-IMSI pair match verified under Sec. 65B Certificate.
+                  </p>
+</div>
+<!-- Evidence Item 2 -->
+<div class="bg-white border border-slate-300 p-3 rounded-lg flex flex-col gap-1">
+<div class="flex items-center justify-between font-mono text-[11px]">
+<span class="text-slate-900 font-semibold flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-slate-600">currency_exchange</span>
+                      EXHIBIT #E-02 · FIU STR #2026-881
+                    </span>
+<span class="text-slate-500 text-[10px]">2026-07-29</span>
+</div>
+<p class="text-slate-600 text-xs leading-relaxed">
+                    $450,000 USD equivalent via Dubai OTC crypto off-ramp to Axis Escrow Account.
+                  </p>
+</div>
+<!-- Evidence Item 3 -->
+<div class="bg-white border border-slate-300 p-3 rounded-lg flex flex-col gap-1">
+<div class="flex items-center justify-between font-mono text-[11px]">
+<span class="text-slate-900 font-semibold flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-slate-600">videocam</span>
+                      EXHIBIT #E-03 · ANPR VEHICLE LOG
+                    </span>
+<span class="text-slate-500 text-[10px]">2026-08-02</span>
+</div>
+<p class="text-slate-600 text-xs leading-relaxed">
+                    CCTV Automated ANPR Capture: MH-02-CD-9102 logged crossing Warehouse Gate 3 at 23:41 UTC.
+                  </p>
+</div>
+</div>
+<!-- Cryptographic Hash Block -->
+<div class="bg-slate-200/80 border border-slate-300 p-2.5 rounded-lg flex flex-col gap-1 font-mono text-[10px]">
+<div class="flex justify-between text-slate-500">
+<span>SHA-256 AUDIT TRAIL HASH:</span>
+<span class="text-emerald-700 font-semibold">LEDGER LOCKED</span>
+</div>
+<span class="text-slate-600 break-all select-all font-mono leading-tight">
+                  e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+                </span>
+</div>
+</div>
+<!-- Action CTAs -->
+<div class="grid grid-cols-2 gap-3 pt-2 font-mono text-xs">
+<button class="px-3 py-2.5 rounded-lg bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-medium flex items-center justify-center gap-2 transition-colors shadow-xs">
+<span class="material-symbols-outlined text-[16px] text-slate-600">folder_shared</span>
+                Export Dossier
+              </button>
+<button class="px-3 py-2.5 rounded-lg bg-slate-700 hover:bg-slate-800 text-white font-medium flex items-center justify-center gap-2 transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[16px]">assignment_turned_in</span>
+                Generate Brief
+              </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Interactive JavaScript -->
+<script>
+      (function() {
+        // Filter pills toggle
+        const filterChips = document.querySelectorAll('.filter-chip');
+        filterChips.forEach(chip => {
+          chip.addEventListener('click', () => {
+            filterChips.forEach(c => {
+              c.classList.remove('bg-slate-700', 'text-white', 'shadow-xs');
+              c.classList.add('bg-white', 'border', 'border-slate-300', 'text-slate-700');
+            });
+            chip.classList.remove('bg-white', 'border', 'border-slate-300', 'text-slate-700');
+            chip.classList.add('bg-slate-700', 'text-white', 'shadow-xs');
+          });
+        });
+
+        // Threshold Slider
+        const predSlider = document.getElementById('pred-slider');
+        const threshVal = document.getElementById('thresh-val');
+        if (predSlider && threshVal) {
+          predSlider.addEventListener('input', (e) => {
+            threshVal.textContent = (e.target.value / 100).toFixed(2);
+          });
+        }
+
+        // Highlight Link interaction
+        const highlightBtns = document.querySelectorAll('.btn-highlight-edge');
+        highlightBtns.forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const linkId = btn.getAttribute('data-link');
+            const linkEl = document.getElementById(linkId);
+            if (linkEl) {
+              linkEl.classList.add('opacity-20');
+              setTimeout(() => linkEl.classList.remove('opacity-20'), 1200);
+            }
+          });
+        });
+
+        // Hover tooltip on nodes
+        const graphNodes = document.querySelectorAll('.graph-node');
+        const tooltip = document.getElementById('node-tooltip');
+        const tipTitle = document.getElementById('tip-title');
+        const tipSub = document.getElementById('tip-sub');
+        const tipScore = document.getElementById('tip-score');
+
+        const nodeMeta = {
+          'node-razor': { title: 'Vikram "Razor" Malhotra', sub: 'PERSON // KINGPIN', score: '0.94 CRITICAL' },
+          'node-apex': { title: 'Apex Global Logistics LLC', sub: 'SHELL CO // UAE', score: '0.88 HIGH' },
+          'node-sim': { title: 'Burner SIM +91-98721', sub: 'HARD-ROTATING IMEI', score: '0.81 HIGH' },
+          'node-safehouse': { title: 'Safehouse Sector-4', sub: 'SAFEHOUSE / CACHE', score: '0.64 MEDIUM' },
+          'node-hawala': { title: 'Hawala Node TR-994', sub: 'FINANCIAL SETTLEMENT', score: '0.59 MEDIUM' },
+          'node-vehicle': { title: 'SUV MH-02-CD-9102', sub: 'VEHICLE RECON', score: '0.31 LOW' },
+          'node-liaison': { title: 'D-Company Liaison Farhan', sub: 'OFFSHORE BROKER', score: '0.76 HIGH' },
+          'node-panasian': { title: 'Pan-Asian HK Shell', sub: 'OFFSHORE SPV', score: '0.52 MEDIUM' }
+        };
+
+        graphNodes.forEach(node => {
+          node.addEventListener('mouseenter', (e) => {
+            const targetId = node.getAttribute('data-target');
+            const data = nodeMeta[targetId];
+            if (data && tooltip) {
+              tipTitle.textContent = data.title;
+              tipSub.textContent = data.sub;
+              tipScore.textContent = 'Score: ' + data.score;
+              tooltip.classList.remove('hidden');
+              tooltip.style.left = (e.clientX - 270) + 'px';
+              tooltip.style.top = (e.clientY - 40) + 'px';
+            }
+          });
+
+          node.addEventListener('mouseleave', () => {
+            if (tooltip) tooltip.classList.add('hidden');
+          });
+        });
+
+        // Run Analytics simulation
+        const runBtn = document.getElementById('btn-run-analytics');
+        const runBtnHeader = document.getElementById('btn-run-analytics-header');
+        function handleRun(button) {
+          if (!button) return;
+          const orig = button.innerHTML;
+          button.innerHTML = '<span class="material-symbols-outlined text-[15px] animate-spin text-slate-600">refresh</span> Re-computing...';
+          button.disabled = true;
+          setTimeout(() => {
+            button.innerHTML = orig;
+            button.disabled = false;
+          }, 900);
+        }
+
+        if (runBtn) runBtn.addEventListener('click', () => handleRun(runBtn));
+        if (runBtnHeader) runBtnHeader.addEventListener('click', () => handleRun(runBtnHeader));
+      })();
+    </script>
+</main>
+</div>
+</body></html>

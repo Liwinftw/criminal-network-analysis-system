@@ -1,0 +1,12 @@
+source,target,relationship,weight
+C001,C002,communication,12
+C001,C003,association,9
+C002,C003,communication,14
+C002,C004,financial,10
+C003,C004,communication,11
+C004,C005,communication,22
+C004,C006,financial,16
+C005,C006,association,15
+C005,C007,communication,9
+C006,C007,communication,12
+C004,C008,association,7
